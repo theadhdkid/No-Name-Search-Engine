@@ -3,6 +3,7 @@
     "@prisma/client": "^6.3.1"
   },
   "devDependencies": {
+    "prettier": "3.4.2",
     "prisma": "^6.3.1"
   }
 }
