@@ -1,208 +1,185 @@
 /* BODY OF CSS */
 * {
-    background-color: #2D2B55;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  background-color: #2d2b55;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #2D2B55;
+  margin: 0;
+  padding: 0;
+  background-color: #2d2b55;
 }
 
 /* THIS IS THE ABOUT ME NAME HEADER  */
 h1 {
-    color: white;
-    margin-left: 23.5%;
-    margin-top: 17vh;
+  color: white;
+  margin-left: 23.5%;
+  margin-top: 17vh;
 }
 
 span {
-    display: inline-block;
-    transform: translateX(-10px);
-    opacity: 0;
-    transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+  display: inline-block;
+  transform: translateX(-10px);
+  opacity: 0;
+  transition:
+    opacity 0.1s ease-in-out,
+    transform 0.1s ease-in-out;
 }
-
 
 /*  PURPLE SIDE BAR ON THE LEFT OF THE PAGE  */
 .sidebar {
-    width: 12vh;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #43306A;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 120px;
+  width: 12vh;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #43306a;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 120px;
 }
 .sidebar a {
-    display: block;
-    color: white;
+  display: block;
+  color: white;
 }
-
 
 /*  PURPLE SIDE BAR HOME BUTTON  */
 #openBtn {
-    color: white;
-    background-color: transparent;
-    cursor: pointer;
-    margin-left: 35px;
-    border: none;
-    transform: rotate(-90deg);
-    font-size: 20px;
-    transition: margin-left 0.5s;
-    text-decoration: none;
+  color: white;
+  background-color: transparent;
+  cursor: pointer;
+  margin-left: 35px;
+  border: none;
+  transform: rotate(-90deg);
+  font-size: 20px;
+  transition: margin-left 0.5s;
+  text-decoration: none;
 }
-
 
 /*  NAV BAR BUTTON (COULD ADD MORE IF WE WANT)  */
 .buttonsss,
 .buttontab {
-    color: white;
-    border: none;
-    text-decoration: none;
-    font-size: 20px;
-    transition: margin-left 0.3s, margin-right 0.3s;
-    margin: 0 20px;
+  color: white;
+  border: none;
+  text-decoration: none;
+  font-size: 20px;
+  transition:
+    margin-left 0.3s,
+    margin-right 0.3s;
+  margin: 0 20px;
 }
 .buttonsss:hover,
 .buttontab:hover {
-    color: grey;
+  color: grey;
 }
 .menu ul {
-    display: flex;
-    list-style: none;
+  display: flex;
+  list-style: none;
 }
 .menu ul li {
-    flex: auto;
-    margin-top: 40px;
+  flex: auto;
+  margin-top: 40px;
 }
 #buttonsss {
-    color: #8400d1;
+  color: #8400d1;
 }
-
 
 /*  RESUME, GITHUB AND LINKED IN BUTTONS  */
 .links-container {
-    display: flex;
-    align-items: center;
-    margin-left: 21.5%;
+  display: flex;
+  align-items: center;
+  margin-left: 21.5%;
 }
 .links-container a {
-    margin: 0 15px;
+  margin: 0 15px;
 }
 .img1,
 .img2 {
-    max-width: 30px;
+  max-width: 30px;
 }
 .resumelink {
-    color: white;
-    background-color: #8400d1;
-    padding: 2px 20px;
-    border-radius: 4px;
-    text-decoration: none;
+  color: white;
+  background-color: #8400d1;
+  padding: 2px 20px;
+  border-radius: 4px;
+  text-decoration: none;
 }
 
 h3 {
-    margin-top: 5vh;
-    margin-left: 30vh;
-    color: white;
+  margin-top: 5vh;
+  margin-left: 30vh;
+  color: white;
 }
 
 /*  REAL ABOUT ME CONTENT   */
 
 .intro-section {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    color: white;
-    padding-top: 20px;
-    padding-left: 23%;
-    padding-right: 20% ;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
+  color: white;
+  padding-top: 20px;
+  padding-left: 23%;
+  padding-right: 20%;
 }
-
-
-
 
 /* MEDIA SIZEING FOR DIFFERENT DIVICES */
 
 @media (max-width: 1650px) {
-    .buttonsss {
-        margin-left: 20vh;
-        margin-right: 10vh;
-    }
+  .buttonsss {
+    margin-left: 20vh;
+    margin-right: 10vh;
+  }
 }
 
 @media (max-width: 1170px) {
-    .buttonsss {
-        margin-left: 16vh;
-        margin-right: 10vh;
-    }
-
-
+  .buttonsss {
+    margin-left: 16vh;
+    margin-right: 10vh;
+  }
 }
 
 @media (max-width: 1040px) {
+  .buttonsss {
+    margin-left: 12vh;
+    margin-right: 7vh;
+  }
 
-
-    .buttonsss {
-        margin-left: 12vh;
-        margin-right: 7vh;
-    }
-
-
-
-    h3 {
-        margin-left: 20vh;
-    }
-
-
+  h3 {
+    margin-left: 20vh;
+  }
 }
 
 @media (max-width: 930px) {
-    h3 {
-        font-size: 2vh;
-    }
-
-
-
-
+  h3 {
+    font-size: 2vh;
+  }
 }
 
 @media (max-width: 744px) {
-    .buttonsss {
-        margin-left: 12vh;
-        margin-right: 3vh;
-    }
+  .buttonsss {
+    margin-left: 12vh;
+    margin-right: 3vh;
+  }
 
-
-
-    h3 {
-        font-size: 2vh;
-    }
-
-
+  h3 {
+    font-size: 2vh;
+  }
 }
 
 @media (max-width: 640px) {
+  .buttonsss {
+    margin-left: 9vh;
+    margin-right: 1vh;
+  }
 
+  .resumelink {
+    padding: 2px 12px;
+    font-size: 13px;
+  }
 
-    .buttonsss {
-        margin-left: 9vh;
-        margin-right: 1vh;
-    }
-
-    .resumelink {
-        padding: 2px 12px;
-        font-size: 13px;
-    }
-
-    h3 {
-        font-size: 1.5vh;
-        margin-left: 15vh;
-    }
-
-
+  h3 {
+    font-size: 1.5vh;
+    margin-left: 15vh;
+  }
 }
