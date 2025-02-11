@@ -42,8 +42,9 @@ span {
     display: block;
     color: white;
 }
-/*  PURPLE SIDE BAR HOME BUTTON  */
 
+
+/*  PURPLE SIDE BAR HOME BUTTON  */
 #openBtn {
     color: white;
     background-color: transparent;
@@ -53,6 +54,7 @@ span {
     transform: rotate(-90deg);
     font-size: 20px;
     transition: margin-left 0.5s;
+    text-decoration: none;
 }
 
 /*  NAV BAR BUTTON (COULD ADD MORE IF WE WANT)  */
@@ -112,9 +114,11 @@ h3 {
 /*  REAL ABOUT ME CONTENT   */
 
 .intro-section {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
     color: white;
     padding-top: 20px;
-   padding-left: 23%;
+    padding-left: 23%;
     padding-right: 20% ;
 }
 
@@ -185,7 +189,6 @@ h3 {
 
 
     .buttonsss {
-        font-size: 10px;
         margin-left: 9vh;
         margin-right: 1vh;
     }
