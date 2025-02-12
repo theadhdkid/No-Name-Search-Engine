@@ -183,3 +183,17 @@ h3 {
     margin-left: 15vh;
   }
 }
+
+/*  IMAGE SECTION STYLING   */
+.image-section {
+  padding-left: 23%;  
+  padding-right: 20%;
+  margin-top: 2rem;
+}
+
+.about-image {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
