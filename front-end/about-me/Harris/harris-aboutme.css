@@ -183,3 +183,13 @@ h3 {
     margin-left: 15vh;
   }
 }
+
+.profile-img {
+  width: 180px;   /* Reduce width */
+  height: 240px;  /* Increase height */
+  border-radius: 20%; /* Slightly rounded corners */
+  display: block;
+  margin: 20px auto; /* Centers it */
+  border: 5px solid white; /* Adds contrast */
+  object-fit: cover; /* Ensures the image fills the space properly */
+}
