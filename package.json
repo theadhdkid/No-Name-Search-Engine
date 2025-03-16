@@ -1,6 +1,14 @@
 {
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "dev": "nf start --procfile Procfile.dev"
+  },
+
   "dependencies": {
-    "@prisma/client": "^6.3.1"
+    "@fastify/autoload": "^6.2.0",
+    "@prisma/client": "^6.3.1",
+    "fastify": "^5.2.1"
   },
   "devDependencies": {
     "prettier": "3.4.2",
