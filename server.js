@@ -3,34 +3,34 @@ import path from 'path';
 import { fileURLToPath } from 'url'; // Required for __dirname equivalent in ESM
 import AutoLoad from '@fastify/autoload';
 import fs from 'fs';
-import prismaPlugin from './plugins/prisma.js'; // Adjust the path as needed
+import cors from '@fastify/cors';  // new import
 
-
-
-
-// ✅ Define `__dirname` manually (since it's not available in ESM)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Initialize Fastify with logging enabled
-const fastify = Fastify({ logger: true });
 
+// DO NOT TOUCH
+const fastify = Fastify({ logger: true });
 console.log('✨ Starting Fastify server... Let’s build something amazing! 🚀');
 
+fastify.register(cors, {
+  origin: '*',  // Allow all origins (for development), replace '*' with specific URLs in production
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers for CORS
+  preflightContinue: false,  // Handle OPTIONS request automatically
+  optionsSuccessStatus: 204, // Response status for successful OPTIONS request
+});
 
-// ✅ Load all plugins
 fastify.register(AutoLoad, {
   dir: path.join(__dirname, 'plugins'),
   options: {},
 });
 console.log('📌 Plugins loaded! Every great app starts with solid building blocks. 💪');
 
-// ✅ Load all non-API routes (excluding `/api` directory)
 const routesPath = path.join(__dirname, 'routes');
 fs.readdirSync(routesPath).forEach(file => {
   const fullPath = path.join(routesPath, file);
 
-  // ✅ Ensure it's a directory before registering
   if (fs.statSync(fullPath).isDirectory() && file !== 'api') {
     fastify.register(AutoLoad, {
       dir: fullPath,
@@ -39,7 +39,6 @@ fs.readdirSync(routesPath).forEach(file => {
   }
 });
 
-// ✅ Load API routes (WITHOUT adding `/api` again)
 fastify.register(AutoLoad, {
   dir: path.join(__dirname, 'routes/api'),
   options: {}, // ❌ Remove prefix to avoid double `/api`
@@ -50,7 +49,6 @@ fastify.ready(() => {
 });
 console.log('🛤️ Routes loaded! Your API is ready to handle requests. 🌍');
 
-// ✅ Start the Fastify server
 const start = async () => {
   try {
     await fastify.listen({ port: 5001, host: '0.0.0.0' });

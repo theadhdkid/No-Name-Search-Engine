@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   // Clear existing data
 
-  // ✅ Create test users with hashed passwords
+  // Create test users with hashed passwords
   const hashedPassword1 = await bcrypt.hash('password123', 10);
   const hashedPassword2 = await bcrypt.hash('testpassword', 10);
 
@@ -16,13 +16,13 @@ async function main() {
         email: 'user@example.com',
         firstName: 'Test',
         lastName: 'User',
-        hashedPassword: hashedPassword1, // Use hashed password
+        hashedPassword: hashedPassword1,
       },
       {
         email: 'jane.smith@test.com',
         firstName: 'Jane',
         lastName: 'Smith',
-        hashedPassword: hashedPassword2, // Use hashed password
+        hashedPassword: hashedPassword2,
       },
     ],
   });

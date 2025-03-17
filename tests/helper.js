@@ -5,50 +5,50 @@ import AutoLoad from '@fastify/autoload';
 import prismaPlugin from '../plugins/prisma.js'; // ✅ Import Prisma plugin
 import { PrismaClient } from '@prisma/client';
 
-// ✅ Convert `import.meta.url` to __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Automatically build and tear down Fastify instance for tests
+// DO NOT TOUCH
+
 export async function build(t) {
   const prisma = new PrismaClient();
 
-  // ✅ Create Fastify instance
+  // CREATING FASTIFY INSTANCE
   const app = Fastify({ logger: false });
 
-  // ✅ Register Prisma plugin before anything else
+  // REGISTERING PRISMA
   app.register(prismaPlugin);
 
-  // ✅ Load all non-API routes (excluding `/api`)
+  // loading all non-API routes (excluding `/api`) (dubug)
   app.register(AutoLoad, {
     dir: path.join(__dirname, '../routes'),
-    ignorePattern: /api/, // ❌ Prevents double-loading `api/`
+    ignorePattern: /api/, // prevents double-loading `api/` (redundant but a debug and it works so dont touch)
     options: {},
   });
 
-  // ✅ Load API routes
+  // load API routes
   app.register(AutoLoad, {
     dir: path.join(__dirname, '../routes/api'),
     options: {},
   });
 
-  // ✅ Connect to Prisma database before tests run
+  // connect to Prisma database before tests run
   await prisma.$connect();
 
   t.prisma = prisma;
 
-  // ✅ Cleanup after each test (reset DB)
+  // cleanup after each test (reset DB)
   t.afterEach(async () => {
     await prisma.$executeRawUnsafe('DELETE FROM Favorite');
   });
 
-  // ✅ Cleanup after all tests
+  //  Cleanup after all tests
   // t.after(async () => {
   //   await app.close();
   //   await prisma.$disconnect();
   // });
 
-  // ✅ Print loaded routes for debugging
+  // Print loaded routes for debugging
   app.ready(() => {
     console.log(app.printRoutes());
   });
