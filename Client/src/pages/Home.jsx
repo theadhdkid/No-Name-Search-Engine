@@ -1,6 +1,8 @@
 import { useForm } from '@mantine/form';
-import { TextInput, PasswordInput, Button, Group, Text } from '@mantine/core';
+import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/core";
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 
 function Home() {
   const form = useForm({
@@ -77,6 +79,9 @@ function Home() {
           Sign In
         </Button>
       </Group>
+      <Text size="sm">
+        <Anchor component={Link} to="/SignUp">Dont have an account? Sign Up</Anchor>
+      </Text>
     </div>
   );
 }
