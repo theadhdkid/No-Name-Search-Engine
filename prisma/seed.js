@@ -4,10 +4,9 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  // ✅ Use `TestUser` (not testUser) to match schema.prisma
-  await prisma.User.deleteMany();
+  // Clear existing data
 
-  // ✅ Create test users
+  // ✅ Create test users with hashed passwords
   const hashedPassword1 = await bcrypt.hash('password123', 10);
   const hashedPassword2 = await bcrypt.hash('testpassword', 10);
 
@@ -17,13 +16,13 @@ async function main() {
         email: 'user@example.com',
         firstName: 'Test',
         lastName: 'User',
-        hashedPassword: hashedPassword1,
+        hashedPassword: hashedPassword1, // Use hashed password
       },
       {
         email: 'jane.smith@test.com',
         firstName: 'Jane',
         lastName: 'Smith',
-        hashedPassword: hashedPassword2,
+        hashedPassword: hashedPassword2, // Use hashed password
       },
     ],
   });

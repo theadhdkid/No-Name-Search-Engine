@@ -40,14 +40,13 @@ export async function build(t) {
   // ✅ Cleanup after each test (reset DB)
   t.afterEach(async () => {
     await prisma.$executeRawUnsafe('DELETE FROM Favorite');
-    await prisma.$executeRawUnsafe('DELETE FROM TestUser');
   });
 
   // ✅ Cleanup after all tests
-  t.after(async () => {
-    await app.close();
-    await prisma.$disconnect();
-  });
+  // t.after(async () => {
+  //   await app.close();
+  //   await prisma.$disconnect();
+  // });
 
   // ✅ Print loaded routes for debugging
   app.ready(() => {

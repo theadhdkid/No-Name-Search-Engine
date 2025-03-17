@@ -9,7 +9,6 @@ async function testPrismaConnection() {
 
     // Try fetching the first user from the User model
     const user = await prisma.user.findFirst();
-    console.log("User found:", user);
 
     if (!user) {
       console.log("No users found in the database.");
