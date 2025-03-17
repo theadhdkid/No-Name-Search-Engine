@@ -6,7 +6,7 @@ import { MantineProvider } from '@mantine/core';
 
 // must import the routes!!
 import Home from './pages/Home.jsx';
-import Test from './pages/Test.jsx';
+import Test from './pages/SignUp.jsx';
 
 import { Routes, Route, BrowserRouter } from 'react-router-dom' // React is used for a 1 page website
 //Routes is what allows the website to be 1 page, we just stay within app but reload routes
@@ -20,7 +20,7 @@ function App () {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />}/>
-          <Route path="/Test" element={<Test />}/>
+          <Route path="/SignUp" element={<Test />}/>
         </Routes>
       </BrowserRouter>
     </MantineProvider>

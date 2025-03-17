@@ -1,11 +1,10 @@
 import { useForm } from '@mantine/form';
 import { TextInput, PasswordInput, Button, Group, Text } from '@mantine/core';
-import { randomId } from '@mantine/hooks';
 import { useState } from 'react';
 
 function Home() {
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
     initialValues: {
       email: '',
       password: '',
@@ -17,15 +16,15 @@ function Home() {
 
   // form submission
   const handleSubmit = async (values) => {
-    setLoading(true);
+    setLoading(true); // telling UI that a request has been made
     setErrorMessage(null);
 
     try {
       // communicating a POST request to backend
       const response = await fetch('http://localhost:5001/api/user/signin', {
-        method: 'POST',
+        method: 'POST', // because we are POSTing user info to database with back end
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', // telling the server that the request body contains JSON data.
         },
         body: JSON.stringify({
           email: values.email,
