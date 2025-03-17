@@ -1,3 +1,5 @@
-module.exports = async function (fastify, opts) {
-  fastify.decorate('example', () => 'Hello from plugin!');
+export default async function (fastify, opts) {
+  fastify.get('/example', async function (request, reply) {
+    return { hello: 'world' };
+  });
 };
