@@ -1,14 +1,43 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("TEST_DATABASE_URL")
+}
+
+model User {
+  id             String     @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String     @unique
+  hashedPassword String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  favorites      Favorite[]
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tool      AITool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+  @@index([toolId], map: "Favorite_toolId_fkey")
+}
+
+model AITool {
+  id          String     @id @default(uuid())
+  name        String
+  category    String
+  brand       String
+  imageUrl    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  favoritedBy Favorite[]
 }

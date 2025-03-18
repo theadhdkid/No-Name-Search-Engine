@@ -1,9 +1,26 @@
 {
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "dev": "nf start --procfile Procfile.dev",
+    "test": "node --test"
+  },
   "dependencies": {
-    "@prisma/client": "^6.3.1"
+    "@fastify/autoload": "^6.2.0",
+    "@fastify/cors": "^11.0.0",
+    "@prisma/client": "^6.3.1",
+    "@tabler/icons-react": "^3.31.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "fastify-plugin": "^5.0.1",
+    "http-status-codes": "^2.3.0",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.4"
   },
   "devDependencies": {
     "prettier": "3.4.2",
     "prisma": "^6.3.1"
-  }
+  },
+  "type": "module"
 }
