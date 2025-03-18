@@ -8,20 +8,19 @@ function Home() {
   const [data, setData] = useState([]);
 
   const fetchSearchResults = async () => {
-    if (searchTerm.trim().length < 1) {
-      console.log("[]");
-      setData([{ name: "Please enter a search term", category: "Error", imageUrl: "" }]);
-      return;
-    }
+    const cleanedSearchTerm = searchTerm.trim(); // ✅ Trim spaces safely
+
+    // ✅ If input is empty OR only a space → Fetch all items
+    const url = cleanedSearchTerm.length === 0
+      ? "http://localhost:5001/api/user/search"
+      : `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`;
 
     setLoading(true);
 
     try {
-      console.log(`Fetching data for: "${searchTerm}"`);
+      console.log(`Fetching data from: ${url}`);
 
-      const response = await fetch(
-        `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`
-      );
+      const response = await fetch(url);
       const result = await response.json();
 
       console.log(JSON.stringify(result, null, 2));
@@ -38,6 +37,8 @@ function Home() {
 
     setLoading(false);
   };
+
+
 
   return (
     <div>
