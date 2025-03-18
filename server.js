@@ -21,6 +21,8 @@ fastify.register(cors, {
   optionsSuccessStatus: 204, // Response status for successful OPTIONS request
 });
 
+
+
 fastify.register(AutoLoad, {
   dir: path.join(__dirname, 'plugins'),
   options: {},

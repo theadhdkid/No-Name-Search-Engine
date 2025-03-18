@@ -1,87 +1,127 @@
-import { useForm } from '@mantine/form';
-import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/core";
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { Autocomplete, Loader, Button } from '@mantine/core';
+import { ArticleCard } from '../components/ArticleCard';
 
 function Home() {
-  const form = useForm({
-    mode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
-    initialValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]); // Stores fetched search results
 
-  // form submission
-  const handleSubmit = async (values) => {
-    setLoading(true); // telling UI that a request has been made
-    setErrorMessage(null);
+  // Fetch search results when button is clicked
+  const fetchSearchResults = async () => {
+    if (searchTerm.trim().length < 1) {
+      console.log("[]"); // Logs empty array if no search term is entered
+      setData([{ name: "Please enter a search term", category: "Error", imageUrl: "" }]);
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      // communicating a POST request to backend
-      const response = await fetch('http://localhost:5001/api/user/signin', {
-        method: 'POST', // because we are POSTing user info to database with back end
-        headers: {
-          'Content-Type': 'application/json', // telling the server that the request body contains JSON data.
-        },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password,
-        }),
-      });
+      console.log(`Fetching data for: "${searchTerm}"`); // Log query input
 
+      const response = await fetch(
+        `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`
+      );
+      const result = await response.json();
 
+      console.log(JSON.stringify(result, null, 2));
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // handle working sign-in
-        console.log('User signed in:', data);
+      if (Array.isArray(result) && result.length > 0) {
+        setData(result); // Store fetched results
       } else {
-        // handling error from backend 3 reasons
-        setErrorMessage(data.message || 'Failed to sign in');
+        setData([{ name: "No tools found", category: "Not Found", imageUrl: "" }]);
       }
     } catch (error) {
-      setErrorMessage('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
+      console.error("Error fetching search results:", error);
+      setData([{ name: "Error loading results", category: "Error", imageUrl: "" }]);
     }
+
+    setLoading(false);
   };
 
   return (
     <div>
-      <TextInput
-        label="Email"
-        placeholder="Email"
-        mt="md"
-        key={form.key('email')}
-        {...form.getInputProps('email')}
-      />
-      <PasswordInput
-        label="Password"
-        placeholder="Password"
-        mt="md"
-        key={form.key('password')}
-        {...form.getInputProps('password')}
-      />
-
-      {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
-
-      <Group position="center" mt="xl">
-        <Button
-          onClick={form.onSubmit(handleSubmit)}
-          loading={loading}
-        >
-          Sign In
+      {/* Search Bar (Fixed at the Top) */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "80%",
+          background: "white",
+          padding: "10px",
+          display: "flex",
+          gap: "10px",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+      >
+        <Autocomplete
+          label="Search AI Tools"
+          placeholder="Enter tool name..."
+          data={[
+            "AI Code Generation",
+            "AI for Cybersecurity",
+            "AI for Finance",
+            "AI for Gaming",
+            "AI for Healthcare",
+            "AI-Powered Productivity",
+            "Computer Vision",
+            "Generative AI",
+            "Machine Learning & Data Science",
+            "Natural Language Processing (NLP)",
+            "Speech Recognition & Synthesis",
+            "AlphaSense",
+            "Amazon",
+            "Darktrace",
+            "DeepMind",
+            "GitHub",
+            "Google",
+            "Grammarly",
+            "IBM",
+            "Jasper AI",
+            "Kavout",
+            "Meta",
+            "MidJourney",
+            "Open Source",
+            "OpenAI",
+            "Tabnine",
+            "Unity",
+          ]}
+          value={searchTerm}
+          onChange={setSearchTerm}
+          rightSection={loading ? <Loader size="sm" /> : null}
+          style={{ flex: 1 }}
+        />
+        <Button onClick={fetchSearchResults} disabled={loading}>
+          {loading ? <Loader size="sm" /> : "Search"}
         </Button>
-      </Group>
-      <Text size="sm">
-        <Anchor component={Link} to="/SignUp">Dont have an account? Sign Up</Anchor>
-      </Text>
+      </div>
+
+      {/* Dynamically Generated Cards */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexWrap: "wrap", // Allow cards to wrap in multiple rows
+          gap: "20px",
+          marginTop: "100px",
+        }}
+      >
+        {data.map((item) => (
+          <ArticleCard
+            key={item.id || item.name} // Ensure unique key for React
+            title={item.name}
+            description={`Brand: ${item.brand || "Unknown"}`}
+            category={item.category}
+            image={item.imageUrl || "https://via.placeholder.com/300"} // Fallback image
+          />
+        ))}
+      </div>
     </div>
   );
 }
