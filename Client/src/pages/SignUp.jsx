@@ -1,12 +1,11 @@
 import { useForm } from '@mantine/form';
 import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/core";
-import { randomId } from '@mantine/hooks';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 
 function SignUp() {
   const form = useForm({
-    mnode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
+    mode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
       initialValues: {
         firstName: '',
         lastName: '',
@@ -60,7 +59,7 @@ function SignUp() {
       <TextInput
         label="firstName"
         placeholder="First Name"
-        mt="{md}"
+        mt="md"
         key={form.key('firstName')}
         {...form.getInputProps('firstName')}
       />
@@ -68,7 +67,7 @@ function SignUp() {
       <TextInput
         label="lastName"
         placeholder="Last Name"
-        mt="{md}"
+        mt="md"
         key={form.key('lastName')}
         {...form.getInputProps('lastName')}
       />
@@ -76,7 +75,7 @@ function SignUp() {
       <TextInput
         label="email"
         placeholder="Email"
-        mt="{md}"
+        mt="md"
         key={form.key('email')}
         {...form.getInputProps('email')}
       />
@@ -84,7 +83,7 @@ function SignUp() {
       <PasswordInput
         label="password"
         placeholder="Password"
-        mt="{md}"
+        mt="md"
         key={form.key('password')}
         {...form.getInputProps('password')}
       />
@@ -92,7 +91,7 @@ function SignUp() {
       <PasswordInput
         label="confirmPassword"
         placeholder="Confirm Password"
-        mt="{md}"
+        mt="md"
         key={form.key('confirmPassword')}
         {...form.getInputProps('confirmPassword')}
       />
