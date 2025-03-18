@@ -37,7 +37,7 @@ test('/api/signin', async (t) => {
 
       const data = await response.json();
       assert.deepStrictEqual(data, {
-        id: 'd99785f6-251b-41fa-821c-ce6902acff43', // using the actual ID here
+        id: 'd99785f6-251b-41fa-821c-ce6902acff43',
         firstName: 'Test',
         lastName: 'User',
         email: 'user@example.com',

@@ -42,14 +42,14 @@ export default async function (fastify, opts) {
   }, async function (request, reply) {
     const { email, password } = request.body;
 
-    // Check if required fields are missing
+    // check if required fields are missing
     if (!email || !password) {
       return reply.status(StatusCodes.BAD_REQUEST).send({
         message: 'Email and password are required.'
       });
     }
 
-    // Fetch user by email
+    // fetching user by email
     const user = await fastify.prisma.user.findUnique({
       where: { email: 'user@example.com' },
     });
@@ -59,12 +59,12 @@ export default async function (fastify, opts) {
     console.log("Stored password:", user?.hashedPassword);
 
     if (user && user.hashedPassword) {
-      // Check if passwords match
+      // check if passwords match
       const isMatch = await bcrypt.compare(password, user.hashedPassword);
       console.log("Do passwords match?", isMatch);
 
       if (isMatch) {
-        // Return user data on successful authentication
+        // return user data on successful authentication
         return reply.status(StatusCodes.OK).send({
           id: user.id,
           firstName: user.firstName,
@@ -74,7 +74,7 @@ export default async function (fastify, opts) {
       }
     }
 
-    // Return unauthorized response if authentication fails
+    // return unauthorized response if authentication fails
     return reply.status(StatusCodes.UNAUTHORIZED).send({
       message: 'Invalid email or password.',
     });

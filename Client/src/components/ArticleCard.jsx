@@ -4,6 +4,8 @@ import { ActionIcon, Avatar, Badge, Card, Center, Group, Image, Text, useMantine
 export function ArticleCard({ title, description, category, image }) {
   const theme = useMantineTheme();
 
+
+  // MANTINE CARD COMPONENT HAVENT IMPLEMENTED SAVED
   return (
     <Card withBorder radius="md" style={{ maxWidth: 300 }}>
 

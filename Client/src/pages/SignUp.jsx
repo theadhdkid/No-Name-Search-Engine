@@ -42,7 +42,7 @@ function SignUp() {
 
       if (response.ok) {
         console.log('User signed up:', data);
-        navigate('/Home'); // Redirect to Home.jsx
+        navigate('/Home'); // redirecting to Home.jsx
       } else {
         setErrorMessage(data.message || 'Failed to sign up.');
       }

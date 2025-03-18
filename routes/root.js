@@ -13,7 +13,7 @@ export default async function (fastify, opts) {
             properties: {
               root: { type: 'boolean' },
             },
-            required: ['root'], // 'required' is an array
+            required: ['root'],
           },
         },
       },

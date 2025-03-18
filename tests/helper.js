@@ -8,7 +8,7 @@ import { PrismaClient } from '@prisma/client';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// DO NOT TOUCH
+// DO NOT TOUCH ANY OF THIS CODE
 
 export async function build(t) {
   const prisma = new PrismaClient();
@@ -42,6 +42,8 @@ export async function build(t) {
     await prisma.$executeRawUnsafe('DELETE FROM Favorite');
   });
 
+
+  // DONT UN COMMENT
   //  Cleanup after all tests
   // t.after(async () => {
   //   await app.close();

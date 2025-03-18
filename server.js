@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import path from 'path';
-import { fileURLToPath } from 'url'; // Required for __dirname equivalent in ESM
+import { fileURLToPath } from 'url';
 import AutoLoad from '@fastify/autoload';
 import fs from 'fs';
 import cors from '@fastify/cors';  // new import
@@ -9,16 +9,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-// DO NOT TOUCH
+// DO NOT TOUCH ANY OF THIS CODE!!!!!!!!!!!!!!
 const fastify = Fastify({ logger: true });
 console.log('✨ Starting Fastify server... Let’s build something amazing! 🚀');
 
+
 fastify.register(cors, {
-  origin: '*',  // Allow all origins (for development), replace '*' with specific URLs in production
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers for CORS
-  preflightContinue: false,  // Handle OPTIONS request automatically
-  optionsSuccessStatus: 204, // Response status for successful OPTIONS request
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 });
 
 
@@ -43,7 +44,7 @@ fs.readdirSync(routesPath).forEach(file => {
 
 fastify.register(AutoLoad, {
   dir: path.join(__dirname, 'routes/api'),
-  options: {}, // ❌ Remove prefix to avoid double `/api`
+  options: {},
 });
 
 fastify.ready(() => {

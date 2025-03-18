@@ -4,9 +4,8 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Clear existing data
 
-  // Create test users with hashed passwords
+  // creating test users with hashed passwords
   const hashedPassword1 = await bcrypt.hash('password123', 10);
   const hashedPassword2 = await bcrypt.hash('testpassword', 10);
 

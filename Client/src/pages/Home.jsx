@@ -5,12 +5,11 @@ import { ArticleCard } from '../components/ArticleCard';
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]); // Stores fetched search results
+  const [data, setData] = useState([]);
 
-  // Fetch search results when button is clicked
   const fetchSearchResults = async () => {
     if (searchTerm.trim().length < 1) {
-      console.log("[]"); // Logs empty array if no search term is entered
+      console.log("[]");
       setData([{ name: "Please enter a search term", category: "Error", imageUrl: "" }]);
       return;
     }
@@ -18,7 +17,7 @@ function Home() {
     setLoading(true);
 
     try {
-      console.log(`Fetching data for: "${searchTerm}"`); // Log query input
+      console.log(`Fetching data for: "${searchTerm}"`);
 
       const response = await fetch(
         `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`
@@ -28,7 +27,7 @@ function Home() {
       console.log(JSON.stringify(result, null, 2));
 
       if (Array.isArray(result) && result.length > 0) {
-        setData(result); // Store fetched results
+        setData(result);
       } else {
         setData([{ name: "No tools found", category: "Not Found", imageUrl: "" }]);
       }
@@ -42,7 +41,6 @@ function Home() {
 
   return (
     <div>
-      {/* Search Bar (Fixed at the Top) */}
       <div
         style={{
           position: "fixed",
@@ -107,18 +105,18 @@ function Home() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          flexWrap: "wrap", // Allow cards to wrap in multiple rows
+          flexWrap: "wrap",
           gap: "20px",
           marginTop: "100px",
         }}
       >
         {data.map((item) => (
           <ArticleCard
-            key={item.id || item.name} // Ensure unique key for React
+            key={item.id || item.name}
             title={item.name}
             description={`Brand: ${item.brand || "Unknown"}`}
             category={item.category}
-            image={item.imageUrl || "https://via.placeholder.com/300"} // Fallback image
+            image={item.imageUrl || "https://via.placeholder.com/300"}
           />
         ))}
       </div>
