@@ -48,7 +48,7 @@ export default async function (fastify, opts) {
       }
 
       if (searchFilter.OR.length == 0) {
-        delete searchFilter.OR
+        delete searchFilter.OR;
       }
 
       console.log("\n🔍 Prisma search filter:", JSON.stringify(searchFilter, null, 2));
