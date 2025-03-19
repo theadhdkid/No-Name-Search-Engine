@@ -35,10 +35,16 @@ function Home() {
 
   const fetchSearchResults = async () => {
     const cleanedSearchTerm = searchTerm.trim(); // ✅ Trim spaces safely
+    const cleanedSelectedCategory = selectedCategory.trim();
 
-    const url = cleanedSearchTerm.length === 0
-      ? "http://localhost:5001/api/user/search"
-      : `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`;
+    const url = new URL("http://localhost:5001/api/user/search")
+
+    if (cleanedSearchTerm.length !== 0) {
+      url.searchParams.append("query", encodeURIComponent(searchTerm))
+    }
+    if (cleanedSelectedCategory.length !== 0) {
+      url.searchParams.append("category", encodeURIComponent(selectedCategory))
+    }
 
     setLoading(true);
 

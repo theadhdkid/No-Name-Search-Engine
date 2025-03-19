@@ -47,6 +47,10 @@ export default async function (fastify, opts) {
         searchFilter.AND.push({ minPrice: { lte: price } });
       }
 
+      if (searchFilter.OR.length == 0) {
+        delete searchFilter.OR
+      }
+
       console.log("\n🔍 Prisma search filter:", JSON.stringify(searchFilter, null, 2));
 
       // ✅ Execute the query and log results
