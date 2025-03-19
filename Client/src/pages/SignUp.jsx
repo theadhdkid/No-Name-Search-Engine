@@ -25,7 +25,7 @@ function SignUp() {
 
     try {
       // communicating a POST request to backend
-      const response = await fetch('http://localhost:5001/api/user/signup', {
+      const response = await fetch('/api/user/signup', {
         method: 'POST', // because we are POSTing user info to database with back end
         headers: {
           'Content-Type': 'application/json', // telling the server that the request body contains JSON data.

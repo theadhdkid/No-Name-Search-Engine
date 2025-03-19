@@ -40,8 +40,8 @@ function Home() {
     }
 
     let url = cleanedSearchTerm.length === 0
-      ? "http://localhost:5001/api/user/search"
-      : `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`;
+      ? "/api/user/search"
+      : `/api/user/search?query=${encodeURIComponent(searchTerm)}`;
 
     if (selectedCategory) {
       let symbol1 = url.includes('?') ? '&' : '?';
