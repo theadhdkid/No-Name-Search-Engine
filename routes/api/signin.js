@@ -51,17 +51,14 @@ export default async function (fastify, opts) {
 
     // fetching user by email
     const user = await fastify.prisma.user.findUnique({
-      where: { email: 'user@example.com' },
+      where: { email },
     });
-
-    console.log("User found:", JSON.stringify(user));
-    console.log("Password from request:", password);
-    console.log("Stored password:", user?.hashedPassword);
 
     if (user && user.hashedPassword) {
       // check if passwords match
+      //testing
+
       const isMatch = await bcrypt.compare(password, user.hashedPassword);
-      console.log("Do passwords match?", isMatch);
 
       if (isMatch) {
         // return user data on successful authentication

@@ -1,9 +1,10 @@
 import { useForm } from '@mantine/form';
 import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/core";
 import { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 
 function SignUp() {
+  const navigate = useNavigate();
   const form = useForm({
     mode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
       initialValues: {
@@ -24,7 +25,7 @@ function SignUp() {
 
     try {
       // communicating a POST request to backend
-      const response = await fetch('http://localhost:5001/api/user/signup', {
+      const response = await fetch('/api/user/signup', {
         method: 'POST', // because we are POSTing user info to database with back end
         headers: {
           'Content-Type': 'application/json', // telling the server that the request body contains JSON data.
@@ -42,6 +43,8 @@ function SignUp() {
 
       if (response.ok) {
         console.log('User signed up:', data);
+        localStorage.setItem('user', JSON.stringify(data));
+
         navigate('/Home'); // redirecting to Home.jsx
       } else {
         setErrorMessage(data.message || 'Failed to sign up.');
@@ -53,66 +56,76 @@ function SignUp() {
       }
     };
 
-  return(
-    <div>
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh'
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '400px',
+        padding: '20px',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+        backgroundColor: 'white'
+      }}>
+        <TextInput
+          label="First Name"
+          placeholder="First Name"
+          mt="md"
+          key={form.key('firstName')}
+          {...form.getInputProps('firstName')}
+        />
 
+        <TextInput
+          label="Last Name"
+          placeholder="Last Name"
+          mt="md"
+          key={form.key('lastName')}
+          {...form.getInputProps('lastName')}
+        />
 
-      <TextInput
-        label="firstName"
-        placeholder="First Name"
-        mt="md"
-        key={form.key('firstName')}
-        {...form.getInputProps('firstName')}
-      />
+        <TextInput
+          label="Email"
+          placeholder="Email"
+          mt="md"
+          key={form.key('email')}
+          {...form.getInputProps('email')}
+        />
 
-      <TextInput
-        label="lastName"
-        placeholder="Last Name"
-        mt="md"
-        key={form.key('lastName')}
-        {...form.getInputProps('lastName')}
-      />
+        <PasswordInput
+          label="Password"
+          placeholder="Password"
+          mt="md"
+          key={form.key('password')}
+          {...form.getInputProps('password')}
+        />
 
-      <TextInput
-        label="email"
-        placeholder="Email"
-        mt="md"
-        key={form.key('email')}
-        {...form.getInputProps('email')}
-      />
+        <PasswordInput
+          label="Confirm Password"
+          placeholder="Confirm Password"
+          mt="md"
+          key={form.key('confirmPassword')}
+          {...form.getInputProps('confirmPassword')}
+        />
 
-      <PasswordInput
-        label="password"
-        placeholder="Password"
-        mt="md"
-        key={form.key('password')}
-        {...form.getInputProps('password')}
-      />
+        {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
 
-      <PasswordInput
-        label="confirmPassword"
-        placeholder="Confirm Password"
-        mt="md"
-        key={form.key('confirmPassword')}
-        {...form.getInputProps('confirmPassword')}
-      />
+        <Group position="center" mt="xl">
+          <Button onClick={form.onSubmit(handleSubmit)} loading={loading}>
+            Sign Up
+          </Button>
+        </Group>
 
-      {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
-
-      <Group position="center" mt="xl">
-        <Button
-          onClick={form.onSubmit(handleSubmit)}
-          loading={loading}
-        >
-          Sign Up
-        </Button>
-      </Group>
-      <Text size="sm">
-        <Anchor component={Link} to="/">Already have an account? Sign In</Anchor>
-      </Text>
+        <Text size="sm" align="center" mt="md">
+          <Anchor component={Link} to="/">Already have an account? Sign In</Anchor>
+        </Text>
+      </div>
     </div>
-    );
-  }
+  );
+}
 
 
 export default SignUp;
