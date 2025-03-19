@@ -48,7 +48,7 @@ function Home() {
       url += `${symbol1}category=${encodeURIComponent(selectedCategory)}`;
     }
 
-    console.log("loading val after true, ", loading);
+    setLoading(true);
 
     try {
       console.log(`Fetching data from: ${url}`);
