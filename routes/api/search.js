@@ -25,6 +25,7 @@ export default async function (fastify, opts) {
       // ✅ Build search filter dynamically
       const searchFilter = {
         OR: [],
+        AND: [],
       };
 
       if (query) {
@@ -34,11 +35,11 @@ export default async function (fastify, opts) {
       }
 
       if (category) {
-        searchFilter.OR.push({ category: { contains: category } });
+        searchFilter.AND.push({ category: { contains: category } });
       }
 
       if (brand) {
-        searchFilter.OR.push({ brand: { contains: brand } });
+        searchFilter.AND.push({ brand: { contains: brand } });
       }
 
       console.log("\n🔍 Prisma search filter:", JSON.stringify(searchFilter, null, 2));
