@@ -3,10 +3,9 @@ import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-
 function SignIn() {
   const form = useForm({
-    mode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
+    mode: 'uncontrolled',
     initialValues: {
       email: '',
       password: '',
@@ -15,37 +14,29 @@ function SignIn() {
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
-
-  // form submission
   const handleSubmit = async (values) => {
-    setLoading(true); // telling UI that a request has been made
+    setLoading(true);
     setErrorMessage(null);
 
     try {
-      // communicating a POST request to backend
+      localStorage.removeItem('user');  // clearing any old data before login attempt
+
       const response = await fetch('http://localhost:5001/api/user/signin', {
-        method: 'POST', // because we are POSTing user info to database with back end
-        headers: {
-          'Content-Type': 'application/json', // telling the server that the request body contains JSON data.
-        },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password,
-        }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: values.email, password: values.password }),
       });
 
-
-
       const data = await response.json();
+      console.log("Backend Response Before Storing:", data);
 
-      if (response.ok) {
-        // handle working sign-in
-        console.log('User signed in:', data);
-        navigate('/Home'); // Redirect to Home.jsx
+      if (response.ok && data.email) {
+        localStorage.setItem('user', JSON.stringify(data));
+        console.log("Updated localStorage with:", JSON.parse(localStorage.getItem('user')));
+        navigate('/Home'); // Redirect after login
       } else {
-        // handling error from backend 3 reasons
         setErrorMessage(data.message || 'Failed to sign in');
       }
     } catch (error) {
@@ -56,35 +47,49 @@ function SignIn() {
   };
 
   return (
-    <div>
-      <TextInput
-        label="Email"
-        placeholder="Email"
-        mt="md"
-        key={form.key('email')}
-        {...form.getInputProps('email')}
-      />
-      <PasswordInput
-        label="Password"
-        placeholder="Password"
-        mt="md"
-        key={form.key('password')}
-        {...form.getInputProps('password')}
-      />
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh'
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '400px',
+        padding: '20px',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+        backgroundColor: 'white'
+      }}>
+        <TextInput
+          label="Email"
+          placeholder="Email"
+          mt="md"
+          key={form.key('email')}
+          {...form.getInputProps('email')}
+        />
+        <PasswordInput
+          label="Password"
+          placeholder="Password"
+          mt="md"
+          key={form.key('password')}
+          {...form.getInputProps('password')}
+        />
 
-      {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
+        {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
 
-      <Group position="center" mt="xl">
-        <Button
-          onClick={form.onSubmit(handleSubmit)}
-          loading={loading}
-        >
-          Sign In
-        </Button>
-      </Group>
-      <Text size="sm">
-        <Anchor component={Link} to="/SignUp">Dont have an account? Sign Up</Anchor>
-      </Text>
+        <Group position="center" mt="xl">
+          <Button
+            onClick={form.onSubmit(handleSubmit)}
+            loading={loading}
+          >
+            Sign In
+          </Button>
+        </Group>
+        <Text size="sm" align="center" mt="md">
+          <Anchor component={Link} to="/SignUp">Don't have an account? Sign Up</Anchor>
+        </Text>
+      </div>
     </div>
   );
 }

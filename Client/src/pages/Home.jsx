@@ -1,16 +1,43 @@
-import { useState } from 'react';
-import { Autocomplete, Loader, Button } from '@mantine/core';
+import { Autocomplete, Loader, Button, Group, Avatar, Title } from "@mantine/core";
 import { ArticleCard } from '../components/ArticleCard';
+import { useState, useEffect } from 'react';
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
+  // getting user information so we can cusom make it just for user
   const [data, setData] = useState([]);
+
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser) {
+          setUserData({
+            id: storedUser.id,
+            firstName: storedUser.firstName,
+            lastName: storedUser.lastName,
+            email: storedUser.email,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const userInitials = userData ?
+    `${userData.firstName[0]}${userData.lastName[0]}` : '';
+
 
   const fetchSearchResults = async () => {
     const cleanedSearchTerm = searchTerm.trim(); // ✅ Trim spaces safely
 
-    // ✅ If input is empty OR only a space → Fetch all items
     const url = cleanedSearchTerm.length === 0
       ? "http://localhost:5001/api/user/search"
       : `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`;
@@ -41,26 +68,57 @@ function Home() {
 
 
   return (
-    <div>
+    <div
+      style={{
+        background: '#0F2E81',
+        minHeight: '100vh',
+        width: '100vw', // Ensures it fills the entire viewport width
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center', // Centering content vertically
+        overflowX: 'hidden', // Prevents unwanted horizontal scrolling
+
+      }}
+    >
+      {/* Header with Search Bar */}
       <div
         style={{
           position: "fixed",
           top: 0,
           left: "50%",
           transform: "translateX(-50%)",
+          width: "100%",
+          background: "#0F2E81",  // Make sure the header blends with the background
+          padding: "15px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+      >
+        <Title size="h3" style={{ color: "white" }}>NoNameSearchEngines</Title>
+      </div>
+
+      {/* Search Bar Section */}
+      <div
+        style={{
+          position: "fixed",
+          top: 70,
+          left: "50%",
+          transform: "translateX(-50%)",
           width: "80%",
-          background: "white",
           padding: "10px",
           display: "flex",
           gap: "10px",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
+          background: "#0F2E81",
         }}
       >
         <Autocomplete
-          label="Search AI Tools"
-          placeholder="Enter tool name..."
+          placeholder="Search AI tools..."
           data={[
             "AI Code Generation",
             "AI for Cybersecurity",
@@ -93,14 +151,30 @@ function Home() {
           value={searchTerm}
           onChange={setSearchTerm}
           rightSection={loading ? <Loader size="sm" /> : null}
-          style={{ flex: 1 }}
+          style={{ flex: 1, background: "white", borderRadius: "5px" }}
         />
         <Button onClick={fetchSearchResults} disabled={loading}>
           {loading ? <Loader size="sm" /> : "Search"}
         </Button>
       </div>
 
-      {/* Dynamically Generated Cards */}
+      {/* User Avatar */}
+      {userData && (
+        <div
+          style={{
+            position: "fixed",
+            top: 10,
+            right: 30,
+            zIndex: 1001,
+          }}
+        >
+          <Avatar radius="xl" color="blue">
+            {userInitials}
+          </Avatar>
+        </div>
+      )}
+
+      {/* Dynamically Generated Cards Section */}
       <div
         style={{
           display: "flex",
@@ -108,7 +182,10 @@ function Home() {
           alignItems: "center",
           flexWrap: "wrap",
           gap: "20px",
-          marginTop: "100px",
+          marginTop: "150px", // Pushes content below fixed elements
+          width: "100%",
+          padding: "20px",
+
         }}
       >
         {data.map((item) => (
