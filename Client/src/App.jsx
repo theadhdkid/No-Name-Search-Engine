@@ -18,7 +18,8 @@ function App () {
     <MantineProvider>
       <BrowserRouter>
         <Routes>
-
+          {/*<Route path="/" element={<SignIn />}/>*/}
+          {/*<Route path="/SignUp" element={<Test />}/>*/}
           <Route path="/" element={<Home />}/>
 
         </Routes>
