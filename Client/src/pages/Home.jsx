@@ -1,4 +1,4 @@
-import { Autocomplete, Loader, Button, Group, Avatar, Title } from "@mantine/core";
+import { Select, Autocomplete, Loader, Button, Group, Avatar, Title } from "@mantine/core";
 import { ArticleCard } from '../components/ArticleCard';
 import { useState, useEffect } from 'react';
 
@@ -7,8 +7,7 @@ function Home() {
   const [loading, setLoading] = useState(false);
   // getting user information so we can cusom make it just for user
   const [data, setData] = useState([]);
-
-
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -33,7 +32,6 @@ function Home() {
 
   const userInitials = userData ?
     `${userData.firstName[0]}${userData.lastName[0]}` : '';
-
 
   const fetchSearchResults = async () => {
     const cleanedSearchTerm = searchTerm.trim(); // ✅ Trim spaces safely
@@ -65,8 +63,6 @@ function Home() {
     setLoading(false);
   };
 
-
-
   return (
     <div
       style={{
@@ -78,7 +74,6 @@ function Home() {
         alignItems: 'center',
         justifyContent: 'center', // Centering content vertically
         overflowX: 'hidden', // Prevents unwanted horizontal scrolling
-
       }}
     >
       {/* Header with Search Bar */}
@@ -117,6 +112,27 @@ function Home() {
           background: "#0F2E81",
         }}
       >
+        {/* ✅ New Category Dropdown */}
+        <Select
+          placeholder="All Categories"
+          data={[
+            "AI Code Generation",
+            "Cybersecurity",
+            "Finance",
+            "Gaming",
+            "Healthcare",
+            "Productivity",
+            "Computer Vision",
+            "Generative AI",
+            "Machine Learning",
+            "NLP",
+            "Speech Recognition",
+          ]}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          style={{ width: "200px", background: "white", borderRadius: "5px" }}
+        />
+
         <Autocomplete
           placeholder="Search AI tools..."
           data={[
@@ -185,7 +201,6 @@ function Home() {
           marginTop: "150px", // Pushes content below fixed elements
           width: "100%",
           padding: "20px",
-
         }}
       >
         {data.map((item) => (
