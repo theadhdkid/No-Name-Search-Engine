@@ -56,6 +56,8 @@ export default async function (fastify, opts) {
 
     if (user && user.hashedPassword) {
       // check if passwords match
+      //testing
+
       const isMatch = await bcrypt.compare(password, user.hashedPassword);
 
       if (isMatch) {
