@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
   // getting user information so we can cusom make it just for user
   const [data, setData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -35,15 +35,17 @@ function Home() {
 
   const fetchSearchResults = async () => {
     const cleanedSearchTerm = searchTerm.trim(); // ✅ Trim spaces safely
-    const cleanedSelectedCategory = selectedCategory.trim();
-
-    const url = new URL("http://localhost:5001/api/user/search")
-
-    if (cleanedSearchTerm.length !== 0) {
-      url.searchParams.append("query", encodeURIComponent(searchTerm))
+    if (selectedCategory) {
+      const cleanedSelectedCategory = selectedCategory.trim();
     }
-    if (cleanedSelectedCategory.length !== 0) {
-      url.searchParams.append("category", encodeURIComponent(selectedCategory))
+
+    let url = cleanedSearchTerm.length === 0
+      ? "http://localhost:5001/api/user/search"
+      : `http://localhost:5001/api/user/search?query=${encodeURIComponent(searchTerm)}`;
+
+    if (selectedCategory) {
+      let symbol1 = url.includes('?') ? '&' : '?';
+      url += `${symbol1}category=${encodeURIComponent(selectedCategory)}`;
     }
 
     setLoading(true);
@@ -123,26 +125,6 @@ function Home() {
           placeholder="All Categories"
           data={[
             "AI Code Generation",
-            "Cybersecurity",
-            "Finance",
-            "Gaming",
-            "Healthcare",
-            "Productivity",
-            "Computer Vision",
-            "Generative AI",
-            "Machine Learning",
-            "NLP",
-            "Speech Recognition",
-          ]}
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-          style={{ width: "200px", background: "white", borderRadius: "5px" }}
-        />
-
-        <Autocomplete
-          placeholder="Search AI tools..."
-          data={[
-            "AI Code Generation",
             "AI for Cybersecurity",
             "AI for Finance",
             "AI for Gaming",
@@ -153,6 +135,15 @@ function Home() {
             "Machine Learning & Data Science",
             "Natural Language Processing (NLP)",
             "Speech Recognition & Synthesis",
+          ]}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          style={{ width: "200px", background: "white", borderRadius: "5px" }}
+        />
+
+        <Autocomplete
+          placeholder="Search AI tools..."
+          data={[
             "AlphaSense",
             "Amazon",
             "Darktrace",
