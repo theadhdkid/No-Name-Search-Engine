@@ -3,16 +3,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import AutoLoad from '@fastify/autoload';
 import fs from 'fs';
-import cors from '@fastify/cors';  // new import
+import cors from '@fastify/cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 // DO NOT TOUCH ANY OF THIS CODE!!!!!!!!!!!!!!
 const fastify = Fastify({ logger: true });
 console.log('✨ Starting Fastify server... Let’s build something amazing! 🚀');
-
 
 fastify.register(cors, {
   origin: '*',
@@ -22,18 +20,17 @@ fastify.register(cors, {
   optionsSuccessStatus: 204,
 });
 
-
-
+// ✅ Load plugins from new application/plugins directory
 fastify.register(AutoLoad, {
-  dir: path.join(__dirname, 'plugins'),
+  dir: path.join(__dirname, 'application/plugins'),
   options: {},
 });
 console.log('📌 Plugins loaded! Every great app starts with solid building blocks. 💪');
 
-const routesPath = path.join(__dirname, 'routes');
+// ✅ Load routes (excluding /api) from application/routes
+const routesPath = path.join(__dirname, 'application/routes');
 fs.readdirSync(routesPath).forEach(file => {
   const fullPath = path.join(routesPath, file);
-
   if (fs.statSync(fullPath).isDirectory() && file !== 'api') {
     fastify.register(AutoLoad, {
       dir: fullPath,
@@ -42,8 +39,9 @@ fs.readdirSync(routesPath).forEach(file => {
   }
 });
 
+// ✅ Load /api routes from application/routes/api
 fastify.register(AutoLoad, {
-  dir: path.join(__dirname, 'routes/api'),
+  dir: path.join(__dirname, 'application/routes/api'),
   options: {},
 });
 

@@ -1,42 +1,41 @@
 import { useForm } from '@mantine/form';
-import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/core";
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Group,
+  Text,
+  Anchor,
+  Paper
+} from "@mantine/core";
 import { useState } from 'react';
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignUp() {
   const navigate = useNavigate();
   const form = useForm({
-    mode: 'uncontrolled', // meaning input values are handled by the DOM, not React state
-      initialValues: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      }
+    mode: 'uncontrolled',
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    }
   });
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values) => {
-    setLoading(true); // telling UI that a request has been made
+    setLoading(true);
     setErrorMessage(null);
 
     try {
-      // communicating a POST request to backend
       const response = await fetch('/api/user/signup', {
-        method: 'POST', // because we are POSTing user info to database with back end
-        headers: {
-          'Content-Type': 'application/json', // telling the server that the request body contains JSON data.
-        },
-        body: JSON.stringify({
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          password: values.password,
-          confirmPassword: values.confirmPassword,
-        }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
       });
 
       const { data } = await response.json();
@@ -44,88 +43,128 @@ function SignUp() {
       if (response.ok) {
         console.log('User signed up:', data);
         localStorage.setItem('user', JSON.stringify(data));
-
-        navigate('/Home'); // redirecting to Home.jsx
+        navigate('/home');
       } else {
         setErrorMessage(data.message || 'Failed to sign up.');
       }
-    } catch(error) {
-        setErrorMessage('Something went wrong. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    } catch (error) {
+      setErrorMessage('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div style={{
+      height: '100vh',
+      width: '100vw',
+      backgroundColor: 'white',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh'
+      padding: '20px',
+      position: 'relative'
     }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '400px',
-        padding: '20px',
-        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        borderRadius: '8px',
-        backgroundColor: 'white'
-      }}>
+      {/* Top-left logo */}
+      <img
+        src="/logo.png"
+        alt="No Name Search Engine"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '30px',
+          width: '130px',
+          height: 'auto'
+        }}
+      />
+
+      <Paper
+        shadow="md"
+        radius="md"
+        p="xl"
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          backgroundColor: 'white',
+          border: '1px solid #ddd'
+        }}
+      >
+        <Text align="center" size="lg" weight={600} mb="xs">
+          CREATE ACCOUNT
+        </Text>
+
+        <Text align="center" size="sm" color="dimmed" mb="lg">
+          Fill in your details to get started!
+        </Text>
+
         <TextInput
           label="First Name"
           placeholder="First Name"
-          mt="md"
           key={form.key('firstName')}
           {...form.getInputProps('firstName')}
+          radius="md"
+          mb="sm"
         />
 
         <TextInput
           label="Last Name"
           placeholder="Last Name"
-          mt="md"
           key={form.key('lastName')}
           {...form.getInputProps('lastName')}
+          radius="md"
+          mb="sm"
         />
 
         <TextInput
           label="Email"
-          placeholder="Email"
-          mt="md"
+          placeholder="you@example.com"
           key={form.key('email')}
           {...form.getInputProps('email')}
+          radius="md"
+          mb="sm"
         />
 
         <PasswordInput
           label="Password"
-          placeholder="Password"
-          mt="md"
+          placeholder="••••••••"
           key={form.key('password')}
           {...form.getInputProps('password')}
+          radius="md"
+          mb="sm"
         />
 
         <PasswordInput
           label="Confirm Password"
-          placeholder="Confirm Password"
-          mt="md"
+          placeholder="••••••••"
           key={form.key('confirmPassword')}
           {...form.getInputProps('confirmPassword')}
+          radius="md"
+          mb="sm"
         />
 
-        {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
+        {errorMessage && <Text color="red" mt="md" align="center">{errorMessage}</Text>}
 
         <Group position="center" mt="xl">
-          <Button onClick={form.onSubmit(handleSubmit)} loading={loading}>
-            Sign Up
+          <Button
+            onClick={form.onSubmit(handleSubmit)}
+            loading={loading}
+            radius="md"
+            fullWidth
+            style={{ backgroundColor: '#0F2E81' }}
+          >
+            Create Account
           </Button>
         </Group>
 
-        <Text size="sm" align="center" mt="md">
-          <Anchor component={Link} to="/">Already have an account? Sign In</Anchor>
+        <Text align="center" size="sm" mt="md">
+          Already have an account?{' '}
+          <Anchor component={Link} to="/" style={{ color: '#0F2E81' }}>
+            Sign In
+          </Anchor>
         </Text>
-      </div>
+      </Paper>
     </div>
   );
 }
-
 
 export default SignUp;

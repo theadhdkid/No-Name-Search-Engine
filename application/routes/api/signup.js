@@ -1,8 +1,8 @@
+console.log("SIGNUP route loaded");
 import { StatusCodes } from 'http-status-codes';
-import bcrypt from 'bcrypt'; // will implement hashedPassword logic for next asmy
+import bcrypt from 'bcrypt';
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
 
 export default async function (fastify, opts) {
   fastify.post('/api/user/signup', {
@@ -22,60 +22,50 @@ export default async function (fastify, opts) {
         [StatusCodes.OK]: {
           type: 'object',
           properties: {
+            userId: { type: 'number' },
             firstName: { type: 'string' },
             lastName: { type: 'string' },
             email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 6 },
-            confirmPassword: { type: 'string', minLength: 6 },
           }
         },
-        [StatusCodes.UNAUTHORIZED]: {
+        [StatusCodes.CONFLICT]: {
           type: 'object',
-          properties: {
-            message: { type: 'string' }
-          }
+          properties: { message: { type: 'string' } }
         },
         [StatusCodes.BAD_REQUEST]: {
           type: 'object',
-            properties: {
-            message: { type: 'string' }
-          }
+          properties: { message: { type: 'string' } }
         }
       }
     }
   }, async function (request, reply) {
     const { firstName, lastName, email, password, confirmPassword } = request.body;
 
-    // testing to make sure all fields are met
-    if(!firstName || !lastName || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       return reply.status(StatusCodes.BAD_REQUEST).send({
         message: 'All fields are required.'
-      })
+      });
     }
 
-    // testing to make sure that password == confirmPassword
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       return reply.status(StatusCodes.BAD_REQUEST).send({
         message: 'Passwords do not match.'
-      })
+      });
     }
 
-    // finding out if email has already created an account
-    const existinguser = await fastify.prisma.user.findUnique({
+    const existinguser = await prisma.user.findUnique({
       where: { email },
-    })
+    });
 
-    if(existinguser) {
+    if (existinguser) {
       return reply.status(StatusCodes.CONFLICT).send({
         message: 'User already exists.'
-      })
+      });
     }
 
-    // hashing password so it doesnt store the raw password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // creating new user and sending this data to the DB
-    const user = await fastify.prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         firstName,
         lastName,
@@ -90,5 +80,5 @@ export default async function (fastify, opts) {
       lastName: user.lastName,
       email: user.email
     });
-  })
+  });
 }
