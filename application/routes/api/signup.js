@@ -22,7 +22,7 @@ export default async function (fastify, opts) {
         [StatusCodes.OK]: {
           type: 'object',
           properties: {
-            userId: { type: 'number' },
+            userId: { type: 'string' },
             firstName: { type: 'string' },
             lastName: { type: 'string' },
             email: { type: 'string', format: 'email' },
@@ -75,7 +75,7 @@ export default async function (fastify, opts) {
     });
 
     return reply.send({
-      userId: user.id,
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email
