@@ -36,7 +36,7 @@ function SearchResults() {
   const fetchResults = async (query, category) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`);
+      const res = await fetch(`http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`);
       const data = await res.json();
       setResults(data);
     } catch (err) {
