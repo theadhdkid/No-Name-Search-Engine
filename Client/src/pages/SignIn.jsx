@@ -1,5 +1,5 @@
 import { useForm } from '@mantine/form';
-import { TextInput, PasswordInput, Button, Group, Text, Anchor } from "@mantine/core";
+import { TextInput, PasswordInput, Button, Group, Text, Anchor, Paper } from "@mantine/core";
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function SignIn() {
     setErrorMessage(null);
 
     try {
-      localStorage.removeItem('user');  // clearing any old data before login attempt
+      localStorage.removeItem('user');
 
       const response = await fetch('/api/user/signin', {
         method: 'POST',
@@ -34,8 +34,7 @@ function SignIn() {
 
       if (response.ok && data.email) {
         localStorage.setItem('user', JSON.stringify(data));
-        console.log("Updated localStorage with:", JSON.parse(localStorage.getItem('user')));
-        navigate('/Home'); // Redirect after login
+        navigate('/home');
       } else {
         setErrorMessage(data.message || 'Failed to sign in');
       }
@@ -48,48 +47,85 @@ function SignIn() {
 
   return (
     <div style={{
+      height: '100vh',
+      width: '100vw',
+      backgroundColor: 'white',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh'
+      padding: '20px',
+      position: 'relative'
     }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '400px',
-        padding: '20px',
-        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        borderRadius: '8px',
-        backgroundColor: 'white'
-      }}>
+      {/* Top-left logo */}
+      <img
+        src="/logo.png" // make sure your logo file is saved in /Client/public/logo.png
+        alt="No Name Search Engine"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '30px',
+          width: '130px',
+          height: 'auto'
+        }}
+      />
+
+      <Paper
+        shadow="md"
+        radius="md"
+        p="xl"
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          backgroundColor: 'white',
+          border: '1px solid #ddd'
+        }}
+      >
+        <Text align="center" size="lg" weight={600} mb="xs">
+          WELCOME BACK!
+        </Text>
+
+        <Text align="center" size="sm" color="dimmed" mb="lg">
+          Sign up or login to use a vast range of AI tools
+        </Text>
+
         <TextInput
           label="Email"
-          placeholder="Email"
-          mt="md"
+          placeholder="you@example.com"
           key={form.key('email')}
           {...form.getInputProps('email')}
+          radius="md"
+          mb="sm"
         />
         <PasswordInput
           label="Password"
-          placeholder="Password"
-          mt="md"
+          placeholder="••••••••"
           key={form.key('password')}
           {...form.getInputProps('password')}
+          radius="md"
+          mb="md"
         />
 
-        {errorMessage && <Text color="red" mt="md">{errorMessage}</Text>}
+        {errorMessage && <Text color="red" mt="md" align="center">{errorMessage}</Text>}
 
         <Group position="center" mt="xl">
           <Button
             onClick={form.onSubmit(handleSubmit)}
             loading={loading}
+            radius="md"
+            fullWidth
+            style={{ backgroundColor: '#0F2E81' }}
           >
             Sign In
           </Button>
         </Group>
-        <Text size="sm" align="center" mt="md">
-          <Anchor component={Link} to="/SignUp">Don't have an account? Sign Up</Anchor>
+
+        <Text align="center" size="sm" mt="md">
+          Don’t have an account?{' '}
+          <Anchor component={Link} to="/signup" style={{ color: '#0F2E81' }}>
+            Create Account
+          </Anchor>
         </Text>
-      </div>
+      </Paper>
     </div>
   );
 }

@@ -1,214 +1,256 @@
-import { Select, Autocomplete, Loader, Button, Group, Avatar, Title } from "@mantine/core";
-import { ArticleCard } from '../components/ArticleCard';
-import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import {
+  Select,
+  Autocomplete,
+  Loader,
+  Button,
+  Avatar,
+  Title,
+  Text,
+  Paper,
+  Menu,
+} from "@mantine/core";
+import { useState, useEffect } from "react";
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
-  // getting user information so we can cusom make it just for user
-  const [data, setData] = useState([]);
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser) {
-          setUserData({
-            id: storedUser.id,
-            firstName: storedUser.firstName,
-            lastName: storedUser.lastName,
-            email: storedUser.email,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
+    // TEMP: Hardcoded user data for UI testing without login — REMOVE LATER
+    const tempUser = {
+      id: 1,
+      firstName: "Anzara",
+      lastName: "Ausaf",
+      email: "anzara@example.com",
     };
-
-    fetchUserData();
+    setUserData(tempUser);
   }, []);
 
-  const userInitials = userData ?
-    `${userData.firstName[0]}${userData.lastName[0]}` : '';
+  const userInitials = userData
+    ? `${userData.firstName[0]}${userData.lastName[0]}`
+    : "";
 
-  const fetchSearchResults = async () => {
-    const cleanedSearchTerm = searchTerm.trim(); // ✅ Trim spaces safely
-    if (selectedCategory) {
-      const cleanedSelectedCategory = selectedCategory.trim();
-    }
+  // Updated fetchSearchResults function to only navigate to the search results page
+  const fetchSearchResults = () => {
+    const cleanedSearchTerm = searchTerm.trim();
 
-    let url = cleanedSearchTerm.length === 0
-      ? "/api/user/search"
-      : `/api/user/search?query=${encodeURIComponent(searchTerm)}`;
+    // Save search term and selected category to localStorage so SearchResults can read them
+    localStorage.setItem("searchTerm", cleanedSearchTerm);
+    localStorage.setItem("selectedCategory", selectedCategory);
 
-    if (selectedCategory) {
-      let symbol1 = url.includes('?') ? '&' : '?';
-      url += `${symbol1}category=${encodeURIComponent(selectedCategory)}`;
-    }
-
-    setLoading(true);
-
-    try {
-      console.log(`Fetching data from: ${url}`);
-
-      const response = await fetch(url);
-      const result = await response.json();
-
-      console.log(JSON.stringify(result, null, 2));
-
-      if (Array.isArray(result) && result.length > 0) {
-        setData(result);
-      } else {
-        setData([{ name: "No tools found", category: "Not Found", imageUrl: "" }]);
-      }
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-      setData([{ name: "Error loading results", category: "Error", imageUrl: "" }]);
-    }
-
-    setLoading(false);
+    // Navigate to results page
+    navigate("/SearchResults");
   };
 
   return (
     <div
       style={{
-        background: '#0F2E81',
-        minHeight: '100vh',
-        width: '100vw', // Ensures it fills the entire viewport width
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center', // Centering content vertically
-        overflowX: 'hidden', // Prevents unwanted horizontal scrolling
+        display: "flex",
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
       }}
     >
-      {/* Header with Search Bar */}
+      {/* Sidebar */}
       <div
         style={{
-          position: "fixed",
-          top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "100%",
-          background: "#0F2E81",  // Make sure the header blends with the background
-          padding: "15px",
+          width: "220px",
+          background: "#d9d9d9",
+          padding: "20px",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
+          flexDirection: "column",
+          gap: "20px",
         }}
       >
-        <Title size="h3" style={{ color: "white" }}>NoNameSearchEngines</Title>
+        <img
+          src="/logo.png"
+          alt="Logo"
+          style={{ width: "120px", marginBottom: "20px" }}
+        />
+        {["Dashboard", "My Tools", "Bookmarks"].map((text) => (
+          <Button
+            key={text}
+            variant="filled"
+            color="gray"
+            style={{ color: "black", background: "#e0e0e0" }}
+            fullWidth
+          >
+            {text}
+          </Button>
+        ))}
+
+        <Text weight={600} size="sm" mt="md" style={{ color: "black" }}>
+          Categories
+        </Text>
+        {[
+          "Academics",
+          "Research",
+          "Career",
+          "Writing Tools",
+          "Mental Health",
+          "Creativity",
+        ].map((cat) => (
+          <Button
+            key={cat}
+            variant="filled"
+            color="gray"
+            style={{ color: "black", background: "#e0e0e0" }}
+            fullWidth
+          >
+            {cat}
+          </Button>
+        ))}
       </div>
 
-      {/* Search Bar Section */}
-      <div
-        style={{
-          position: "fixed",
-          top: 70,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "80%",
-          padding: "10px",
-          display: "flex",
-          gap: "10px",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-          background: "#0F2E81",
-        }}
-      >
-        {/* ✅ New Category Dropdown */}
-        <Select
-          placeholder="All Categories"
-          data={[
-            "AI Code Generation",
-            "AI for Cybersecurity",
-            "AI for Finance",
-            "AI for Gaming",
-            "AI for Healthcare",
-            "AI-Powered Productivity",
-            "Computer Vision",
-            "Generative AI",
-            "Machine Learning & Data Science",
-            "Natural Language Processing (NLP)",
-            "Speech Recognition & Synthesis",
-          ]}
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-          style={{ width: "200px", background: "white", borderRadius: "5px" }}
-        />
+      {/* Main Content */}
+      <div style={{ flex: 1, padding: "30px 40px", position: "relative" }}>
+        {/* Avatar Menu */}
+        {userData && (
+          <div style={{ position: "absolute", top: 30, right: 40 }}>
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <Avatar radius="xl" color="gray" style={{ cursor: "pointer" }}>
+                  {userInitials}
+                </Avatar>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item>Customize Settings</Menu.Item>
+                <Menu.Item>Help</Menu.Item>
+                <Menu.Item>Account Settings</Menu.Item>
+                <Menu.Item color="red">Logout</Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </div>
+        )}
 
-        <Autocomplete
-          placeholder="Search AI tools..."
-          data={[
-            "AlphaSense",
-            "Amazon",
-            "Darktrace",
-            "DeepMind",
-            "GitHub",
-            "Google",
-            "Grammarly",
-            "IBM",
-            "Jasper AI",
-            "Kavout",
-            "Meta",
-            "MidJourney",
-            "Open Source",
-            "OpenAI",
-            "Tabnine",
-            "Unity",
-          ]}
-          value={searchTerm}
-          onChange={setSearchTerm}
-          rightSection={loading ? <Loader size="sm" /> : null}
-          style={{ flex: 1, background: "white", borderRadius: "5px" }}
-        />
-        <Button onClick={fetchSearchResults} disabled={loading}>
-          {loading ? <Loader size="sm" /> : "Search"}
-        </Button>
-      </div>
+        {/* Greeting */}
+        <Title order={2} style={{ marginBottom: "10px" }}>
+          Hello Again, {userData?.firstName || "User"}!
+        </Title>
 
-      {/* User Avatar */}
-      {userData && (
+        {/* Search */}
         <div
           style={{
-            position: "fixed",
-            top: 10,
-            right: 30,
-            zIndex: 1001,
+            display: "flex",
+            gap: "10px",
+            marginBottom: "30px",
+            alignItems: "center",
           }}
         >
-          <Avatar radius="xl" color="blue">
-            {userInitials}
-          </Avatar>
-        </div>
-      )}
-
-      {/* Dynamically Generated Cards Section */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "20px",
-          marginTop: "150px", // Pushes content below fixed elements
-          width: "100%",
-          padding: "20px",
-        }}
-      >
-        {data.map((item) => (
-          <ArticleCard
-            key={item.id || item.name}
-            title={item.name}
-            description={`Brand: ${item.brand || "Unknown"}`}
-            category={item.category}
-            image={item.imageUrl || "https://via.placeholder.com/300"}
+          <Select
+            placeholder="All Categories"
+            data={[
+              "AI Code Generation",
+              "AI for Cybersecurity",
+              "AI for Finance",
+              "AI for Gaming",
+              "AI for Healthcare",
+              "AI-Powered Productivity",
+              "Computer Vision",
+              "Generative AI",
+              "Machine Learning & Data Science",
+              "Natural Language Processing (NLP)",
+              "Speech Recognition & Synthesis",
+            ]}
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            style={{ width: "220px", background: "white", borderRadius: "5px" }}
           />
-        ))}
+          <Autocomplete
+            placeholder="What tool can I help you find today?"
+            value={searchTerm}
+            onChange={setSearchTerm}
+            rightSection={loading ? <Loader size="sm" /> : null}
+            style={{ flex: 1, background: "white", borderRadius: "5px" }}
+          />
+          <Button
+            onClick={fetchSearchResults}
+            disabled={loading}
+            style={{ backgroundColor: "black", color: "white" }}
+          >
+            {loading ? <Loader size="sm" color="white" /> : "Search"}
+          </Button>
+        </div>
+
+        {/* Dashboard Section */}
+        <Title order={3} mb="sm" align="left">
+          DASHBOARD
+        </Title>
+
+        <Paper
+          p="md"
+          shadow="xs"
+          mb="lg"
+          style={{
+            backgroundColor: "#d3d3d3",
+            borderRadius: "6px",
+          }}
+        >
+          <Text weight={600} mb="sm" align="center" style={{ marginBottom: "20px" }}>
+            Recent Activity
+          </Text>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {["Paraphraser tools help", "Data Analysis tools comparison", "Research assistance"].map(
+              (activity, index) => (
+                <div
+                  key={index}
+                  style={{
+                    background: "white",
+                    padding: "12px 20px",
+                    borderRadius: "4px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text weight={500}>{activity}</Text>
+                  <Button
+                    size="xs"
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                      padding: "5px 12px",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    OPEN
+                  </Button>
+                </div>
+              )
+            )}
+          </div>
+        </Paper>
+
+        {/* Previously Used Tools — TEMPORARILY DISABLED */}
+        {/*
+        <Title order={4} mb="sm">
+          Previously Used Tools
+        </Title>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
+            marginTop: "10px",
+          }}
+        >
+          {data.map((item) => (
+            <ArticleCard
+              key={item.id || item.name}
+              title={item.name}
+              description={`Brand: ${item.brand || "Unknown"}`}
+              category={item.category}
+              image={item.imageUrl || "https://via.placeholder.com/300"}
+            />
+          ))}
+        </div>
+        */}
       </div>
     </div>
   );
