@@ -75,7 +75,7 @@ export default async function (fastify, opts) {
     });
 
     return reply.send({
-      id: user.id,
+      userId: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email
