@@ -21,7 +21,7 @@ function App () {
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/SearchResults" element={<SearchResults />} /> {/* ✅ New route */}
+          <Route path="/SearchResults" element={<SearchResults />} /> {/* New route */}
         </Routes>
       </BrowserRouter>
     </MantineProvider>
