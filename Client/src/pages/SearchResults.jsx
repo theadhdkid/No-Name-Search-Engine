@@ -3,11 +3,18 @@ import { Select, Button, Avatar, Title, Text, Autocomplete, Loader, Paper, Menu,
 import { ArticleCard } from "../components/ArticleCard";
 
 function SearchResults() {
+  const [filters, setFilters] = useState({
+    category: "",
+    ratings: "",
+    time: "",
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [userData, setUserData] = useState(null);
+
 
   useEffect(() => {
     // TEMP: Hardcoded user data for UI testing without login — REMOVE LATER
@@ -36,7 +43,7 @@ function SearchResults() {
   const fetchResults = async (query, category) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`);
+      const res = await fetch(`http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`);
       const data = await res.json();
       setResults(data);
     } catch (err) {
@@ -103,22 +110,72 @@ function SearchResults() {
           <Autocomplete value={searchTerm} onChange={setSearchTerm} rightSection={loading ? <Loader size="sm" /> : null} style={{ width: "100%", background: "white", borderRadius: "5px" }} />
         </div>
 
-        {/* Filter Section */}
-        <Paper p="md" shadow="xs" mb="xl" style={{ backgroundColor: "#e0e0e0" }}>
-          <Text weight={600} mb="sm">Filter Tools</Text>
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <Select placeholder="Category" data={[]} disabled />
-            <Select placeholder="Access" data={[]} disabled />
-            <Select placeholder="Time" data={[]} disabled />
-            <Select placeholder="Ratings" data={[]} disabled />
-          </div>
+{/*FILTER TOOLS*/}
+<Paper
+  p={6}
+  radius="sm"
+  withBorder
+  style={{
+    backgroundColor: "#f9f9f9",
+    marginBottom: "12px",
+    boxShadow: "none",
+    border: "1px solid #e0e0e0",
+  }}
+>
+  <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+  <Select
+  placeholder="Category"
+  data={["Writing", "Career", "Academics", "Research", "Mental Health", "Creativity"]}
+  value={filters.category}
+  onChange={(value) => {
+    setFilters({ ...filters, category: value });
+    fetchResults(searchTerm, value); // Update this to also use ratings/time if needed
+  }}
+  size="xs"
+/>
 
-          <Text size="sm" mt="sm" mb="xs">Active Filters:</Text>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <Chip checked readOnly variant="filled" color="gray">FREE</Chip>
-            <Chip checked readOnly variant="filled" color="gray">WRITING TOOLS</Chip>
-          </div>
-        </Paper>
+<Select
+  placeholder="Ratings"
+  data={["5 stars", "4+ stars", "3+ stars"]}
+  value={filters.ratings}
+  onChange={(value) => {
+    setFilters({ ...filters, ratings: value });
+  }}
+  size="xs"
+/>
+<Select
+  placeholder="Time"
+  data={["Recently Added", "Most Popular"]}
+  value={filters.time}
+  onChange={(value) => {
+    setFilters({ ...filters, time: value });
+  }}
+  size="xs"
+/>
+  </div>
+
+
+  <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
+    {Object.entries(filters).map(([key, value]) =>
+      value ? (
+        <Chip
+          key={key}
+          variant="light"
+          color="gray"
+          size="xs"
+          checked
+          onClose={() => {
+            const updatedFilters = { ...filters, [key]: "" };
+            setFilters(updatedFilters);
+            if (key === "category") fetchResults(searchTerm, ""); // update only if category cleared
+          }}
+        >
+          {value}
+        </Chip>
+      ) : null
+    )}
+  </div>
+</Paper>
 
         {/* Result Count */}
         <Title order={4} mb="md">Showing {results.length} Results</Title>

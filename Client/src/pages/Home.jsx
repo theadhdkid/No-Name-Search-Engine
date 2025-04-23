@@ -19,16 +19,14 @@ function Home() {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
+  //removed hardcoded user
   useEffect(() => {
-    // TEMP: Hardcoded user data for UI testing without login — REMOVE LATER
-    const tempUser = {
-      id: 1,
-      firstName: "Anzara",
-      lastName: "Ausaf",
-      email: "anzara@example.com",
-    };
-    setUserData(tempUser);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    }
   }, []);
+  
 
   const userInitials = userData
     ? `${userData.firstName[0]}${userData.lastName[0]}`
