@@ -1,44 +1,46 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Select, Button, Avatar, Title, Text, Autocomplete, Loader, Paper, Menu, Chip } from "@mantine/core";
 import { ArticleCard } from "../components/ArticleCard";
 
 function SearchResults() {
+  const navigate = useNavigate();
+
   const [filters, setFilters] = useState({
     category: "",
     ratings: "",
     time: "",
   });
-
+  const [theme, setTheme] = useState("light");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [userData, setUserData] = useState(null);
 
-
   useEffect(() => {
-    // TEMP: Hardcoded user data for UI testing without login — REMOVE LATER
-    const tempUser = {
-      id: 1,
-      firstName: "Anzara",
-      lastName: "Ausaf",
-      email: "anzara@example.com",
-    };
-    setUserData(tempUser);
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUserData(JSON.parse(storedUser));
+      }
+      const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  setTheme(savedTheme);
+}
 
-    // Retrieve the search term and selected category from localStorage
-    const storedSearchTerm = localStorage.getItem("searchTerm");
-    const storedCategory = localStorage.getItem("selectedCategory");
-
-    if (storedSearchTerm) {
-      setSearchTerm(storedSearchTerm);
-    }
-    if (storedCategory) {
-      setSelectedCategory(storedCategory);
-    }
-
-    fetchResults(storedSearchTerm, storedCategory);
-  }, []);
+      const storedSearchTerm = localStorage.getItem("searchTerm");
+      const storedCategory = localStorage.getItem("selectedCategory");
+    
+      if (storedSearchTerm) {
+        setSearchTerm(storedSearchTerm);
+      }
+      if (storedCategory) {
+        setSelectedCategory(storedCategory);
+      }
+    
+      fetchResults(storedSearchTerm, storedCategory);
+    }, []);
+    
 
   const fetchResults = async (query, category) => {
     setLoading(true);
@@ -59,15 +61,40 @@ function SearchResults() {
   const userInitials = userData ? `${userData.firstName[0]}${userData.lastName[0]}` : "";
 
   return (
-    <div style={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden" }}>
+    <div
+  style={{
+    backgroundColor:
+      theme === "dark"
+        ? "#1a1a1a"
+        : theme === "light"
+        ? "#f4f4f4"
+        : theme, // treat it as a custom color hex code
+    color: theme === "dark" ? "#ffffff" : "#000000",
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
+    overflow: "hidden",
+  }}
+>
       {/* Sidebar */}
       <div style={{ width: "220px", background: "#d9d9d9", padding: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <img src="/logo.png" alt="Logo" style={{ width: "120px", marginBottom: "20px" }} />
         {["Dashboard", "My Tools", "Bookmarks"].map((text) => (
-          <Button key={text} variant="filled" color="gray" style={{ color: "black", background: "#e0e0e0" }} fullWidth>
-            {text}
-          </Button>
-        ))}
+  <Button
+    key={text}
+    variant="filled"
+    color="gray"
+    style={{ color: "black", background: "#e0e0e0" }}
+    fullWidth
+    onClick={() => {
+      if (text === "Dashboard") navigate("/home");
+    }}
+  >
+    {text}
+  </Button>
+))}
+
+
 
         <Text weight={600} size="sm" mt="md" style={{ color: "black" }}>
           Categories
