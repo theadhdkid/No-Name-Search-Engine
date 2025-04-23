@@ -30,23 +30,26 @@ function SignUp() {
   const handleSubmit = async (values) => {
     setLoading(true);
     setErrorMessage(null);
+    console.log('Sending signup values:', values);
+
 
     try {
-      const response = await fetch(' http://localhost:5001/api/user/signup', {
+      const response = await fetch('http://localhost:5001/api/user/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
       });
 
-      const { data } = await response.json();
+      const responseBody = await response.json();
 
       if (response.ok) {
-        console.log('User signed up:', data);
-        localStorage.setItem('user', JSON.stringify(data));
+        console.log('User signed up:', responseBody);
+        localStorage.setItem('user', JSON.stringify(responseBody));
         navigate('/home');
       } else {
-        setErrorMessage(data.message || 'Failed to sign up.');
+        setErrorMessage(responseBody.message || 'Failed to sign up.');
       }
+
     } catch (error) {
       setErrorMessage('Something went wrong. Please try again.');
     } finally {
