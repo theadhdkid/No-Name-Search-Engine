@@ -3,6 +3,7 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
+  //Putting API keys in .env in the future for security concerns
   apiKey:
     "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",
   defaultHeaders: {
