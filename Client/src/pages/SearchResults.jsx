@@ -48,7 +48,7 @@ if (savedTheme) {
       localStorage.setItem("selectedCategory", category);
       try {
         const res = await fetch(
-          `http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
+          `/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
         );
         const data = await res.json();
         console.log(" Search API response:", data);
