@@ -15,6 +15,7 @@
     "fastify": "^5.2.1",
     "fastify-plugin": "^5.0.1",
     "http-status-codes": "^2.3.0",
+    "openai": "^4.96.0",
     "zod": "^3.24.2",
     "zod-to-json-schema": "^3.24.4"
   },
