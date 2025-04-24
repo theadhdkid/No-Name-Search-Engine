@@ -42,21 +42,28 @@ if (savedTheme) {
     }, []);
     
 
-  const fetchResults = async (query, category) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`);
-      const data = await res.json();
-      setResults(data);
-    } catch (err) {
-      console.error("Error fetching search results:", err);
-      setResults([
-        { name: "Error loading results", category: "Error", brand: "Unknown", imageUrl: "" },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchResults = async (query, category) => {
+      setLoading(true);
+      localStorage.setItem("searchTerm", query);
+      localStorage.setItem("selectedCategory", category);
+      try {
+        const res = await fetch(
+          `http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
+        );
+        const data = await res.json();
+        console.log(" Search API response:", data);
+        setResults(Array.isArray(data) ? data : []);
+        console.log("👉 First item:", data[0]);
+      } catch (err) {
+        console.error("Error fetching search results:", err);
+        setResults([
+          { name: "Error loading results", category: "Error", brand: "Unknown", imageUrl: "" },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
 
   const userInitials = userData ? `${userData.firstName[0]}${userData.lastName[0]}` : "";
 
@@ -134,7 +141,27 @@ if (savedTheme) {
 
         {/* Search bar */}
         <div style={{ marginBottom: "20px" }}>
-          <Autocomplete value={searchTerm} onChange={setSearchTerm} rightSection={loading ? <Loader size="sm" /> : null} style={{ width: "100%", background: "white", borderRadius: "5px" }} />
+        <div style={{ display: "flex", gap: "10px" }}>
+  <Autocomplete
+    placeholder="What tool can I help you find today?"
+    value={searchTerm}
+    onChange={setSearchTerm}
+    rightSection={loading ? <Loader size="sm" /> : null}
+    style={{ flex: 1, background: "white", borderRadius: "5px" }}
+  />
+  <Button
+  onClick={() => {
+    localStorage.setItem("searchTerm", searchTerm);
+    localStorage.setItem("selectedCategory", selectedCategory);
+    fetchResults(searchTerm, selectedCategory);
+  }}
+  disabled={loading}
+  style={{ backgroundColor: "black", color: "white" }}
+>
+    {loading ? <Loader size="sm" color="white" /> : "Search"}
+  </Button>
+</div>
+
         </div>
 
 {/*FILTER TOOLS*/}
