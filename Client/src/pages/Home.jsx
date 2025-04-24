@@ -25,7 +25,7 @@ function Home() {
   const [theme, setTheme] = useState("light"); // for storing default theme
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme); // 🔐 Save to localStorage
+    localStorage.setItem("theme", newTheme); // Save to localStorage
   };
   
   const [customColor, setCustomColor] = useState("#646cff"); // default custom color
