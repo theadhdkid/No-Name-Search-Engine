@@ -48,7 +48,7 @@ if (savedTheme) {
       localStorage.setItem("selectedCategory", category);
       try {
         const res = await fetch(
-          `http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
+          `/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
         );
         const data = await res.json();
         console.log(" Search API response:", data);
@@ -66,6 +66,34 @@ if (savedTheme) {
     
 
   const userInitials = userData ? `${userData.firstName[0]}${userData.lastName[0]}` : "";
+
+  const handleAddBookmark = async (tool) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !tool.id) return;
+  
+    try {
+      const res = await fetch("http://localhost:5001/api/user/bookmark", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          toolId: tool.id,
+        }),
+      });
+  
+      const data = await res.json();
+      if (res.status === 201) {
+        alert("Tool bookmarked!");
+      } else {
+        alert(data.message || "Something went wrong");
+      }
+    } catch (err) {
+      console.error("Error bookmarking tool:", err);
+    }
+  };
+  
 
   return (
     <div
@@ -95,11 +123,14 @@ if (savedTheme) {
     fullWidth
     onClick={() => {
       if (text === "Dashboard") navigate("/home");
+      if (text === "Bookmarks") navigate("/bookmarks");
+      //add my tools later
     }}
   >
     {text}
   </Button>
 ))}
+
 
 
 
@@ -234,6 +265,7 @@ if (savedTheme) {
         {/* Result Count */}
         <Title order={4} mb="md">Showing {results.length} Results</Title>
 
+
         {/* Search Results */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {results.map((item) => (
@@ -244,6 +276,7 @@ if (savedTheme) {
               category={item.category}
               brand={item.brand}
               image={item.imageUrl || "https://via.placeholder.com/300"}
+              onBookmark={() => handleAddBookmark(item)} 
             />
           ))}
         </div>

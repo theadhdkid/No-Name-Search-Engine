@@ -105,17 +105,22 @@ function Home() {
             style={{ width: "120px", marginBottom: "20px" }}
           />
           {["Dashboard", "My Tools", "Bookmarks"].map((text) => (
-            <Button
-              key={text}
-              variant="filled"
-              color="gray"
-              style={{ color: "black", background: "#e0e0e0" }}
-              fullWidth
-            >
-              {text}
-            </Button>
-          ))}
-  
+  <Button
+    key={text}
+    variant="filled"
+    color="gray"
+    style={{ color: "black", background: "#e0e0e0" }}
+    fullWidth
+    onClick={() => {
+      if (text === "Dashboard") navigate("/home");
+      if (text === "Bookmarks") navigate("/bookmarks");
+      //later define My Tools
+    }}
+  >
+    {text}
+  </Button>
+))}
+
           <Text weight={600} size="sm" mt="md" style={{ color: "black" }}>
             Categories
           </Text>
@@ -144,27 +149,28 @@ function Home() {
           {/* Avatar Menu */}
           {userData && (
             <div style={{ position: "absolute", top: 30, right: 40 }}>
-              <Menu shadow="md" width={200}>
-                <Menu.Target>
-                  <Avatar radius="xl" color="gray" style={{ cursor: "pointer" }}>
-                    {userInitials}
-                  </Avatar>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item onClick={() => setSettingsOpen(true)}>Customize Settings</Menu.Item>
-                  <Menu.Item>Help</Menu.Item>
-                  <Menu.Item>Account Settings</Menu.Item>
-                  <Menu.Item
-                    color="red"
-                    onClick={() => {
-                      localStorage.removeItem("user");
-                      navigate("/");
-                    }}
-                  >
-                    Logout
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+             <Menu shadow="md" width={200} withArrow position="bottom-end">
+  <Menu.Target>
+    <Avatar radius="xl" color="gray" style={{ cursor: "pointer" }}>
+      {userInitials}
+    </Avatar>
+  </Menu.Target>
+  <Menu.Dropdown>
+    <Menu.Item onClick={() => setSettingsOpen(true)}>Customize Settings</Menu.Item>
+    <Menu.Item>Help</Menu.Item>
+    <Menu.Item>Account Settings</Menu.Item>
+    <Menu.Item
+      color="red"
+      onClick={() => {
+        localStorage.removeItem("user");
+        navigate("/");
+      }}
+    >
+      Logout
+    </Menu.Item>
+  </Menu.Dropdown>
+</Menu>
+
             </div>
           )}
   

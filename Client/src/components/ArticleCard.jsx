@@ -1,7 +1,7 @@
 import { IconBookmark, IconHeart, IconShare } from '@tabler/icons-react';
 import { ActionIcon, Avatar, Badge, Card, Center, Group, Image, Text, useMantineTheme } from '@mantine/core';
 
-export function ArticleCard({ title, description, category, image }) {
+export function ArticleCard({ title, description, category, image, onBookmark }) {
   const theme = useMantineTheme();
 
 
@@ -31,7 +31,7 @@ export function ArticleCard({ title, description, category, image }) {
           <ActionIcon>
             <IconHeart size={16} color={theme.colors.red[6]} />
           </ActionIcon>
-          <ActionIcon>
+          <ActionIcon onClick={onBookmark} style={{ cursor: "pointer" }}>
             <IconBookmark size={16} color={theme.colors.yellow[7]} />
           </ActionIcon>
           <ActionIcon>
