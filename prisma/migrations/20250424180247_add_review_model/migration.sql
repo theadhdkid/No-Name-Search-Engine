@@ -38,8 +38,28 @@ CREATE TABLE `AITool` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Review` (
+    `id` VARCHAR(191) NOT NULL,
+    `content` VARCHAR(191) NOT NULL,
+    `rating` INTEGER NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `toolId` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `Review_toolId_idx`(`toolId`),
+    INDEX `Review_userId_idx`(`userId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Favorite` ADD CONSTRAINT `Favorite_toolId_fkey` FOREIGN KEY (`toolId`) REFERENCES `AITool`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Favorite` ADD CONSTRAINT `Favorite_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Review` ADD CONSTRAINT `Review_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Review` ADD CONSTRAINT `Review_toolId_fkey` FOREIGN KEY (`toolId`) REFERENCES `AITool`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
