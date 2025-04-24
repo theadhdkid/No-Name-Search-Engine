@@ -44,7 +44,7 @@ function SearchResults() {
 
   const handleViewReviews = async (toolId) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/reviews?toolId=${toolId}`);
+      const res = await fetch(`/api/reviews?toolId=${toolId}`); //!!!!!!!
       const data = await res.json();
       setSelectedToolReviews(data);
       setViewReviewsModalOpen(true);
@@ -114,7 +114,7 @@ function SearchResults() {
     if (!user || !tool.id) return;
 
     try {
-      const res = await fetch("http://localhost:5001/api/user/bookmark", {
+      const res = await fetch("/api/user/bookmark", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -349,8 +349,9 @@ function SearchResults() {
             mt="md"
             onClick={async () => {
               try {
-                await fetch("http://localhost:5001/api/reviews", {
-                  method: "POST",
+                // await fetch("http://localhost:5001/api/reviews", { LOCAL TESTING
+                  await fetch('/api/reviews', {
+                    method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
                     userId: userData?.id,
