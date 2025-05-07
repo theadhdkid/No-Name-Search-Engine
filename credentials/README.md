@@ -7,12 +7,12 @@
 
 # Below is a list of items required. Missing items will causes points to be deducted from multiple milestone submissions.
 
-1. Server URL or IP: `34.94.34.117`
+1. Server URL or IP: `34.102.37.218`
 2. SSH Username: `student`
 3. SSH Password or Key:
    - SSH Key: Stored in this folder separately.
 4. Database URL or IP and Port:
-   - Host: `34.94.34.117`
+   - Host: `34.102.37.218`
    - Port: `3306` (MySQL)
 5. Database Username: `NNSETeam`
 6. Database Password: `NNSEpassword`
@@ -31,7 +31,7 @@
    1. SSH into the VM first (see above).
    2. Once connected, run:
       ```bash
-      mysql -u NNSETeam -p -h 34.94.34.117 -P 3306
+      mysql -u NNSETeam -p -h 34.102.37.218 -P 3306
       ```
    3. Enter the password: `NNSEpassword`.
 
