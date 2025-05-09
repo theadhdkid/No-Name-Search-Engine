@@ -61,7 +61,7 @@ export default async function (fastify, opts) {
       const results = await prisma.AITool.findMany({
         where: searchFilter,
         include: {
-          review: true, // include all reviews for each tool
+          reviews: true, // include all reviews for each tool
         },
       });
       console.log(" Prisma returned:", results.length, "results\n", results);
