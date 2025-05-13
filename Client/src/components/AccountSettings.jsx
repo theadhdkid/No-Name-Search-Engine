@@ -6,7 +6,7 @@ import {
   Group,
   Text,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AccountSettings({ opened, onClose, userData }) {
   const [editFirstName, setEditFirstName] = useState(false);
@@ -18,7 +18,16 @@ export default function AccountSettings({ opened, onClose, userData }) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  useEffect(() => {
+    if (userData) {
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setEmail(userData.email);
+    }
+  }, [userData]);
+
   const handleSave = async () => {
+    console.log("userData/AccountSettings", userData);
     const payload = {};
 
     if (editFirstName) payload.firstName = firstName;
@@ -37,7 +46,7 @@ export default function AccountSettings({ opened, onClose, userData }) {
 
     try {
       const res = await fetch("/api/user/update-profile", {
-        method: "POST",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });

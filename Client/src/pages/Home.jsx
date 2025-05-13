@@ -35,22 +35,28 @@ function Home() {
 
   const [recentSearches, setRecentSearches] = useState([]);
 
-
   //removed hardcoded user
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    /*
     if (storedUser) {
       setUserData(JSON.parse(storedUser));
+      console.log("User data:", storedUser);
+    }*/
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserData(parsedUser);
+      console.log("User data:", parsedUser);
     }
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       setTheme(savedTheme);
     }
 
-    const storedSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    const storedSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
     setRecentSearches(storedSearches);
   }, []);
-
 
   const userInitials = userData
     ? `${userData.firstName[0]}${userData.lastName[0]}`
@@ -82,9 +88,6 @@ function Home() {
 
     navigate("/SearchResults");
   };
-
-
-
 
   return (
     <>
@@ -335,7 +338,6 @@ function Home() {
                   No recent searches yet.
                 </Text>
               )}
-
             </div>
           </Paper>
           <div style={{ marginTop: "2rem" }}>

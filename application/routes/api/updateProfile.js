@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function (fastify, opts) {
-  fastify.post('/api/user/update-profile', {
+  fastify.patch('/api/user/update-profile', {
     schema: {
       // The update profile route will update the user's info with the provided fields
       body: {
