@@ -155,13 +155,12 @@ function SearchResults() {
 
   // List of available categories
   const categories = [
-    "Computer Vision",
-    "Machine Learning & Data Science",
-    "Natural Language Processing",
-    "Speech Recognition & Synthesis",
-    "AI for Finance",
-    "AI for Gaming",
-    "AI-Powered Productivity"
+    "Academics",
+    "Research",
+    "Career",
+    "Writing Tools",
+    "Mental Health",
+    "Creativity",
   ];
 
   // Rating filter options
@@ -226,7 +225,7 @@ function SearchResults() {
             alt="Logo"
             style={{ width: "120px", marginBottom: "20px" }}
           />
-          {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
+          {["Dashboard", "Tool of the Day"].map((text) => (
             <Button
               key={text}
               variant="filled"

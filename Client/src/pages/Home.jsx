@@ -1,68 +1,90 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Select,
-  Autocomplete,
+  Title,
   Loader,
   Button,
-  Avatar,
-  Title,
   Text,
+  Select,
+  Autocomplete,
+  Avatar,
   Paper,
   Menu,
+  Grid
 } from "@mantine/core";
-import { useState, useEffect } from "react";
+import { ArticleCard } from "../components/ArticleCard";
 import CustomizeSettings from "../components/CustomizeSettings";
-import AIchat from "../components/AIchat";
 import AccountSettings from "../components/AccountSettings";
+import AIchat from "../components/AIchat";
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
   const [accountOpen, setAccountOpen] = useState(false);
-
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [theme, setTheme] = useState("light"); // for storing default theme
-  const handleThemeChange = (newTheme) => {
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme); // Save to localStorage
-  };
-
-  const [customColor, setCustomColor] = useState("#646cff"); // default custom color
+  const [theme, setTheme] = useState("light");
+  const [customColor, setCustomColor] = useState("#646cff");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [recentSearches, setRecentSearches] = useState([]);
 
   const navigate = useNavigate();
 
-  const [recentSearches, setRecentSearches] = useState([]);
-
-  //removed hardcoded user
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    /*
-    if (storedUser) {
-      setUserData(JSON.parse(storedUser));
-      console.log("User data:", storedUser);
-    }*/
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUserData(parsedUser);
-      console.log("User data:", parsedUser);
-    }
+    if (!storedUser) return navigate("/");
+
+    const parsedUser = JSON.parse(storedUser);
+    setUserData(parsedUser);
+
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       setTheme(savedTheme);
     }
 
-    const storedSearches =
-      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    const storedSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
     setRecentSearches(storedSearches);
+
+    fetchBookmarks(parsedUser.id);
   }, []);
 
   const userInitials = userData
     ? `${userData.firstName[0]}${userData.lastName[0]}`
     : "";
 
-  // Updated fetchSearchResults function to only navigate to the search results page
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
+  const fetchBookmarks = async (userId) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/user/bookmark?userId=${userId}`);
+      const data = await res.json();
+      setBookmarks(data);
+    } catch (err) {
+      console.error("Error fetching bookmarks:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemove = async (toolId) => {
+    if (!userData) return;
+
+    try {
+      await fetch(`/api/user/bookmark?userId=${userData.id}&toolId=${toolId}`, {
+        method: "DELETE",
+      });
+      // Refresh bookmark list
+      fetchBookmarks(userData.id);
+    } catch (err) {
+      console.error("Error deleting bookmark:", err);
+    }
+  };
+
   const fetchSearchResults = () => {
     const cleanedSearchTerm = searchTerm.trim();
 
@@ -104,22 +126,21 @@ function Home() {
         userData={userData}
       />
 
-<div
-  style={{
-    backgroundColor:
-      theme === "dark"
-        ? "#1a1a1a"
-        : theme === "light"
-        ? "#f4f4f4"
-        : theme,
-    color: theme === "dark" ? "#ffffff" : "#000000",
-    display: "flex",
-    minHeight: "100vh",   // allowed bigger pages
-    width: "100vw",
-    overflowY: "auto",    // enabled scrolling
-  }}
->
-
+      <div
+        style={{
+          backgroundColor:
+            theme === "dark"
+              ? "#1a1a1a"
+              : theme === "light"
+                ? "#f4f4f4"
+                : theme,
+          color: theme === "dark" ? "#ffffff" : "#000000",
+          display: "flex",
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+        }}
+      >
         {/* Sidebar */}
         <div
           style={{
@@ -136,12 +157,16 @@ function Home() {
             alt="Logo"
             style={{ width: "120px", marginBottom: "20px" }}
           />
-          {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
+          {["Dashboard", "Tool of the Day"].map((text) => (
             <Button
               key={text}
               variant="filled"
               color="gray"
-              style={{ color: "black", background: "#e0e0e0" }}
+              style={{
+                color: "black",
+                background: text === "Bookmarks" ? "#c0c0c0" : "#e0e0e0",
+                fontWeight: text === "Bookmarks" ? "bold" : "normal"
+              }}
               fullWidth
               onClick={() => {
                 if (text === "Dashboard") navigate("/home");
@@ -174,10 +199,10 @@ function Home() {
               {cat}
             </Button>
           ))}
-        </div>{" "}
-        {/* Closing Sidebar */}
+        </div>
+
         {/* Main Content */}
-        <div style={{ flex: 1, padding: "30px 40px", position: "relative" }}>
+        <div style={{ flex: 1, padding: "30px 40px", position: "relative", overflowY: "auto" }}>
           {/* Avatar Menu */}
           {userData && (
             <div style={{ position: "absolute", top: 30, right: 40 }}>
@@ -213,7 +238,7 @@ function Home() {
             </div>
           )}
 
-          {/* Greeting */}
+          {/* greeting */}
           <Title
             order={2}
             style={{
@@ -242,13 +267,12 @@ function Home() {
             <Select
               placeholder="All Categories"
               data={[
-                "Computer Vision",
-                "Machine Learning & Data Science",
-                "Natural Language Processing",
-                "Speech Recognition & Synthesis",
-                "AI for Finance",
-                "AI for Gaming",
-                "AI-Powered Productivity"
+                "Academic" ,
+                "Research",
+                "Career",
+                "Writting Tools",
+                "Mental Health",
+                "Creativity"
               ]}
               value={selectedCategory}
               onChange={setSelectedCategory}
@@ -284,9 +308,9 @@ function Home() {
             shadow="xs"
             mb="lg"
             style={{
-              backgroundColor: theme === "dark" ? "#333" : "#d3d3d3", // updated for dark mode
+              backgroundColor: theme === "dark" ? "#333" : "#d3d3d3",
               borderRadius: "6px",
-              color: theme === "dark" ? "#ffffff" : "#000000", // Optional: ensure inner text is also visible
+              color: theme === "dark" ? "#ffffff" : "#000000",
             }}
           >
             <Text
@@ -341,6 +365,44 @@ function Home() {
               )}
             </div>
           </Paper>
+
+          {/* bookmarking section */}
+          <Title order={3} mb="md" style={{ marginTop: "30px" }}>
+            YOUR BOOKMARKED TOOLS
+          </Title>
+
+          {loading ? (
+            <Loader />
+          ) : (
+            <div>
+              {bookmarks.length === 0 ? (
+                <Text>No bookmarks found.</Text>
+              ) : (
+                <Grid>
+                  {bookmarks.map((fav) => (
+                    <Grid.Col key={fav.tool.id} span={4}>
+                      <ArticleCard
+                        title={fav.tool.name}
+                        description={
+                          fav.tool.description || "No description available."
+                        }
+                        category={fav.tool.category}
+                        brand={fav.tool.brand}
+                        image={fav.tool.imageUrl || "https://via.placeholder.com/300"}
+                        extra={
+                          <Button color="red" onClick={() => handleRemove(fav.tool.id)}>
+                            Remove Bookmark
+                          </Button>
+                        }
+                      />
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              )}
+            </div>
+          )}
+
+          {/* AI Chat Section */}
           <div style={{ marginTop: "2rem" }}>
             <AIchat theme={theme} />
           </div>

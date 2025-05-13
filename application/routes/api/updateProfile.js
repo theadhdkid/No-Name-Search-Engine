@@ -100,8 +100,15 @@ export default async function (fastify, opts) {
         data: { hashedPassword: hashedNewPassword }
       });
     }
-
     
+    if (email) {
+      // Change email
+      await prisma.user.update({
+        where: { email: oldEmail },
+        data: { email }
+      });
+    }
+
     // Construct the update data object
     const updateData = {};
     if (firstName) updateData.firstName = firstName;
