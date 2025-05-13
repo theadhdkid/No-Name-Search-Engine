@@ -15,7 +15,7 @@ function Bookmarks() {
 
     const user = JSON.parse(storedUser);
     setUserData(user);
-    fetchBookmarks(user.userId);
+    fetchBookmarks(user.id);
   }, []);
 
   const fetchBookmarks = async (userId) => {

@@ -1,4 +1,4 @@
-import { IconBookmark, IconHeart, IconShare } from "@tabler/icons-react";
+import { IconBookmark, IconPencil } from "@tabler/icons-react";
 import {
   ActionIcon,
   Avatar,
@@ -18,14 +18,37 @@ export function ArticleCard({
   image,
   onBookmark,
   onReview,
-  onClickRating = () => {}, // ✅ default fallback
+  onClickRating = () => {}, // default fallback
 }) {
   const theme = useMantineTheme();
 
   // MANTINE CARD COMPONENT HAVENT IMPLEMENTED SAVED
   return (
-    <Card withBorder radius="md" style={{ maxWidth: 300 }}>
-      <Badge variant="gradient" gradient={{ from: "blue", to: "cyan" }}>
+    <Card
+  withBorder
+  radius="lg"
+  shadow="sm"
+  style={{
+    maxWidth: 300,
+    backgroundColor: theme.colorScheme === "dark" ? "#1a1a1a" : "#ffffff",
+    color: theme.colorScheme === "dark" ? "#f0f0f0" : "#000000",
+    fontFamily: "'Montserrat', sans-serif",
+    padding: "1.25rem",
+    border: "1px solid #ccc",
+  }}
+>
+<Badge
+  variant="filled"
+  color="gray"
+  style={{
+    fontSize: "0.7rem",
+    fontWeight: 600,
+    borderRadius: "999px",
+    textTransform: "uppercase",
+    backgroundColor: theme.colorScheme === "dark" ? "#3a3a3a" : "#e0e0e0",
+    color: theme.colorScheme === "dark" ? "#ffffff" : "#000000",
+  }}
+>
         {category || "Uncategorized"}
       </Badge>
 
@@ -33,42 +56,45 @@ export function ArticleCard({
         {title}
       </Text>
 
-      <Text size="sm" color="dimmed" lineClamp={3}>
-        {description || "No description available."}
-      </Text>
-
       <Group justify="space-between" mt="md">
-        <Center>
-          <Avatar
-            src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png"
-            size={24}
-            radius="xl"
-            mr="xs"
-          />
-          <Text size="sm">Verified</Text>
-          <Text
-            size="sm"
-            style={{
-              marginLeft: "8px",
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-            onClick={onClickRating ?? (() => {})}
-          >
-            Reviews
-          </Text>
-        </Center>
-
+  <Text
+    size="sm"
+    style={{
+      textDecoration: "underline",
+      cursor: "pointer",
+    }}
+    onClick={onClickRating ?? (() => {})}
+  >
+    Reviews
+  </Text>
         <Group gap={8}>
-          <ActionIcon>
-            <IconHeart size={16} color={theme.colors.red[6]} />
-          </ActionIcon>
-          <ActionIcon onClick={onBookmark} style={{ cursor: "pointer" }}>
-            <IconBookmark size={16} color={theme.colors.yellow[7]} />
-          </ActionIcon>
-          <ActionIcon onClick={onReview} style={{ cursor: "pointer" }}>
-            <IconShare size={16} color={theme.colors.red[6]} />
-          </ActionIcon>
+        <ActionIcon
+  onClick={onBookmark}
+  variant="light"
+  style={{
+    cursor: "pointer",
+    backgroundColor: theme.colorScheme === "dark" ? "#2c2c2c" : "#f0f0f0",
+    color: theme.colorScheme === "dark" ? "#ffffff" : "#000000",
+    border: "1px solid transparent",
+    transition: "background-color 0.2s",
+  }}
+>
+  <IconBookmark size={16} color={theme.colors.yellow[7]} />
+</ActionIcon>
+
+<ActionIcon
+  onClick={onReview}
+  variant="light"
+  style={{
+    cursor: "pointer",
+    backgroundColor: theme.colorScheme === "dark" ? "#2c2c2c" : "#f0f0f0",
+    color: theme.colorScheme === "dark" ? "#ffffff" : "#000000",
+    border: "1px solid transparent",
+    transition: "background-color 0.2s",
+  }}
+>
+  <IconPencil size={16} color={theme.colors.blue[6]} />
+</ActionIcon>
         </Group>
       </Group>
     </Card>

@@ -120,32 +120,38 @@ function SearchResults() {
     ? `${userData.firstName[0]}${userData.lastName[0]}`
     : "";
 
-  const handleAddBookmark = async (tool) => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || !tool.id) return;
-
-    try {
-      const res = await fetch("/api/user/bookmark", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.userId,
-          toolId: tool.id,
-        }),
-      });
-
-      const data = await res.json();
-      if (res.status === 201) {
-        alert("Tool bookmarked!");
-      } else {
-        alert(data.message || "Something went wrong");
+    const handleAddBookmark = async (tool) => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id; // bookmark should correctly function now
+    
+      if (!userId || !tool.id) {
+        alert("User ID and Tool ID are required.");
+        return;
       }
-    } catch (err) {
-      console.error("Error bookmarking tool:", err);
-    }
-  };
+    
+      try {
+        const res = await fetch("/api/user/bookmark", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            toolId: tool.id,
+          }),
+        });
+    
+        const data = await res.json();
+        if (res.status === 201) {
+          alert("Tool bookmarked!");
+        } else {
+          alert(data.message || "Something went wrong");
+        }
+      } catch (err) {
+        console.error("Error bookmarking tool:", err);
+      }
+    };
+    
 
   // List of available categories
   const categories = [
