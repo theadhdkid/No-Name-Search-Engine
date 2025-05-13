@@ -35,15 +35,13 @@ function Bookmarks() {
     if (!userData) return;
 
     try {
-      
       /*await fetch(
         `http://127.0.0.1:5001/api/user/bookmark?userId=${userData.id}&toolId=${toolId}`,
         { method: "DELETE" }
       );*/
-      await fetch(
-        `/api/user/bookmark?userId=${userData.id}&toolId=${toolId}`,
-        { method: "DELETE" }
-      );
+      await fetch(`/api/user/bookmark?userId=${userData.id}&toolId=${toolId}`, {
+        method: "DELETE",
+      });
       // Refresh bookmark list
       fetchBookmarks(userData.id);
     } catch (err) {
@@ -53,7 +51,9 @@ function Bookmarks() {
 
   return (
     <div style={{ padding: "40px" }}>
-      <Title order={2} mb="md">Your Bookmarked Tools</Title>
+      <Title order={2} mb="md">
+        Your Bookmarked Tools
+      </Title>
       {loading ? (
         <Loader />
       ) : (
@@ -65,7 +65,9 @@ function Bookmarks() {
               <ArticleCard
                 key={fav.tool.id}
                 title={fav.tool.name}
-                description={fav.tool.description || "No description available."}
+                description={
+                  fav.tool.description || "No description available."
+                }
                 category={fav.tool.category}
                 brand={fav.tool.brand}
                 image={fav.tool.imageUrl || "https://via.placeholder.com/300"}

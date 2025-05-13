@@ -1,50 +1,50 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Select, Button, Avatar, Title, Text, Autocomplete, Loader, Paper, Menu, Chip, Modal, Rating, Textarea} from "@mantine/core";
+import {
+  Select,
+  Button,
+  Avatar,
+  Title,
+  Text,
+  Autocomplete,
+  Loader,
+  Paper,
+  Menu,
+  Chip,
+  Modal,
+  Rating,
+  Textarea,
+} from "@mantine/core";
 import { ArticleCard } from "../components/ArticleCard";
 
 function SearchResults() {
   const navigate = useNavigate();
 
-  const [filters, setFilters] = useState({
-    category: "",
-    ratings: "",
-    time: "",
-  });
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [theme, setTheme] = useState("light");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [userData, setUserData] = useState(null);
 
-  //Review Modal:
-
-
+  // Review Modal:
   const [modalOpened, setModalOpened] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [currentToolId, setCurrentToolId] = useState(null);
   const [rating, setRating] = useState(0);
-
-
-
 
   const openReviewModal = (toolId) => {
     setCurrentToolId(toolId);
     setModalOpened(true);
   };
 
-
-  // Reivew List Modal
+  // Review List Modal
   const [viewReviewsModalOpen, setViewReviewsModalOpen] = useState(false);
   const [selectedToolReviews, setSelectedToolReviews] = useState([]);
 
-
-
-
   const handleViewReviews = async (toolId) => {
     try {
-      const res = await fetch(`/api/reviews?toolId=${toolId}`); //!!!!!!!
+      const res = await fetch(`/api/reviews?toolId=${toolId}`);
       const data = await res.json();
       setSelectedToolReviews(data);
       setViewReviewsModalOpen(true);
@@ -53,9 +53,6 @@ function SearchResults() {
       alert("Could not fetch reviews.");
     }
   };
-
-
-
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -80,37 +77,35 @@ function SearchResults() {
     fetchResults(storedSearchTerm, storedCategory);
   }, []);
 
-
   const fetchResults = async (query, category) => {
     setLoading(true);
-    localStorage.setItem("searchTerm", query);
-    localStorage.setItem("selectedCategory", category);
-    try {
-      /*
-      const res = await fetch(
-        `/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
-      );
-      */
+    localStorage.setItem("searchTerm", query || "");
+    localStorage.setItem("selectedCategory", category || "");
 
-       const res = await fetch(
-         `/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
-       ); 
+    try {
+      const url = `/api/user/search?query=${encodeURIComponent(query || "")}&category=${encodeURIComponent(category || "")}`;
+      const res = await fetch(url);
       const data = await res.json();
-      console.log(" Search API response:", data);
+      console.log("Search API response:", data);
       setResults(Array.isArray(data) ? data : []);
-      console.log("👉 First item:", data[0]);
     } catch (err) {
       console.error("Error fetching search results:", err);
       setResults([
-        { name: "Error loading results", category: "Error", brand: "Unknown", imageUrl: "" },
+        {
+          name: "Error loading results",
+          category: "Error",
+          brand: "Unknown",
+          imageUrl: "",
+        },
       ]);
     } finally {
       setLoading(false);
     }
   };
 
-
-  const userInitials = userData ? `${userData.firstName[0]}${userData.lastName[0]}` : "";
+  const userInitials = userData
+    ? `${userData.firstName[0]}${userData.lastName[0]}`
+    : "";
 
   const handleAddBookmark = async (tool) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -139,16 +134,23 @@ function SearchResults() {
     }
   };
 
+  // List of available categories
+  const categories = [
+    "Writing",
+    "Career",
+    "Academics",
+    "Research",
+    "Mental Health",
+    "Creativity",
+    "AI for Gaming",
+    "AI-Powered Productivity"
+  ];
 
   return (
     <div
       style={{
         backgroundColor:
-          theme === "dark"
-            ? "#1a1a1a"
-            : theme === "light"
-              ? "#f4f4f4"
-              : theme, // treat it as a custom color hex code
+          theme === "dark" ? "#1a1a1a" : theme === "light" ? "#f4f4f4" : theme,
         color: theme === "dark" ? "#ffffff" : "#000000",
         display: "flex",
         height: "100vh",
@@ -157,8 +159,21 @@ function SearchResults() {
       }}
     >
       {/* Sidebar */}
-      <div style={{ width: "220px", background: "#d9d9d9", padding: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
-        <img src="/logo.png" alt="Logo" style={{ width: "120px", marginBottom: "20px" }} />
+      <div
+        style={{
+          width: "220px",
+          background: "#d9d9d9",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <img
+          src="/logo.png"
+          alt="Logo"
+          style={{ width: "120px", marginBottom: "20px" }}
+        />
         {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
           <Button
             key={text}
@@ -176,21 +191,39 @@ function SearchResults() {
           </Button>
         ))}
 
-
-
-
         <Text weight={600} size="sm" mt="md" style={{ color: "black" }}>
           Categories
         </Text>
-        {["Academics", "Research", "Career", "Writing Tools", "Mental Health", "Creativity"].map((cat) => (
-          <Button key={cat} variant="filled" color="gray" style={{ color: "black", background: "#e0e0e0" }} fullWidth>
+        {categories.map((cat) => (
+          <Button
+            key={cat}
+            variant="filled"
+            color="gray"
+            style={{
+              color: "black",
+              background: selectedCategory === cat ? "#b0b0b0" : "#e0e0e0"
+            }}
+            fullWidth
+            onClick={() => {
+              const newCategory = selectedCategory === cat ? "" : cat;
+              setSelectedCategory(newCategory);
+              fetchResults(searchTerm, newCategory);
+            }}
+          >
             {cat}
           </Button>
         ))}
       </div>
 
       {/* Main Content */}
-      <div style={{ flex: 1, padding: "30px 40px", position: "relative", overflowY: "auto" }}>
+      <div
+        style={{
+          flex: 1,
+          padding: "30px 40px",
+          position: "relative",
+          overflowY: "auto",
+        }}
+      >
         {/* Avatar */}
         {userData && (
           <div style={{ position: "absolute", top: 30, right: 40 }}>
@@ -226,21 +259,16 @@ function SearchResults() {
               style={{ flex: 1, background: "white", borderRadius: "5px" }}
             />
             <Button
-              onClick={() => {
-                localStorage.setItem("searchTerm", searchTerm);
-                localStorage.setItem("selectedCategory", selectedCategory);
-                fetchResults(searchTerm, selectedCategory);
-              }}
+              onClick={() => fetchResults(searchTerm, selectedCategory)}
               disabled={loading}
               style={{ backgroundColor: "black", color: "white" }}
             >
               {loading ? <Loader size="sm" color="white" /> : "Search"}
             </Button>
           </div>
-
         </div>
 
-        {/*FILTER TOOLS*/}
+        {/* FILTER SECTION */}
         <Paper
           p={6}
           radius="sm"
@@ -252,64 +280,56 @@ function SearchResults() {
             border: "1px solid #e0e0e0",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "8px",
+            }}
+          >
             <Select
               placeholder="Category"
-              data={["Writing", "Career", "Academics", "Research", "Mental Health", "Creativity"]}
-              value={filters.category}
+              data={categories}
+              value={selectedCategory}
               onChange={(value) => {
-                setFilters({ ...filters, category: value });
-                fetchResults(searchTerm, value); // Update this to also use ratings/time if needed
+                setSelectedCategory(value);
+                fetchResults(searchTerm, value);
               }}
               size="xs"
-            />
-
-            <Select
-              placeholder="Ratings"
-              data={["5 stars", "4+ stars", "3+ stars"]}
-              value={filters.ratings}
-              onChange={(value) => {
-                setFilters({ ...filters, ratings: value });
-              }}
-              size="xs"
-            />
-            <Select
-              placeholder="Time"
-              data={["Recently Added", "Most Popular"]}
-              value={filters.time}
-              onChange={(value) => {
-                setFilters({ ...filters, time: value });
-              }}
-              size="xs"
+              clearable
             />
           </div>
 
-
-          <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
-            {Object.entries(filters).map(([key, value]) =>
-              value ? (
-                <Chip
-                  key={key}
-                  variant="light"
-                  color="gray"
-                  size="xs"
-                  checked
-                  onClose={() => {
-                    const updatedFilters = { ...filters, [key]: "" };
-                    setFilters(updatedFilters);
-                    if (key === "category") fetchResults(searchTerm, ""); // update only if category cleared
-                  }}
-                >
-                  {value}
-                </Chip>
-              ) : null
-            )}
-          </div>
+          {selectedCategory && (
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                marginTop: "6px",
+                flexWrap: "wrap",
+              }}
+            >
+              <Chip
+                variant="light"
+                color="gray"
+                size="xs"
+                checked
+                onClose={() => {
+                  setSelectedCategory("");
+                  fetchResults(searchTerm, "");
+                }}
+              >
+                {selectedCategory}
+              </Chip>
+            </div>
+          )}
         </Paper>
 
         {/* Result Count */}
-        <Title order={4} mb="md">Showing {results.length} Results</Title>
-
+        <Title order={4} mb="md">
+          Showing {results.length} Results
+        </Title>
 
         {/* Search Results */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -389,21 +409,25 @@ function SearchResults() {
           padding="lg"
           radius="md"
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          >
             {selectedToolReviews.length === 0 ? (
               <Text>No reviews yet.</Text>
             ) : (
               selectedToolReviews.map((review, idx) => (
                 <Paper key={idx} shadow="xs" p="md" withBorder>
-                  <Text size="sm" fw={500} mb={4}>⭐ {review.rating}</Text>
-                  <Text size="sm" color="dimmed">{review.content}</Text>
+                  <Text size="sm" fw={500} mb={4}>
+                    ⭐ {review.rating}
+                  </Text>
+                  <Text size="sm" color="dimmed">
+                    {review.content}
+                  </Text>
                 </Paper>
               ))
             )}
           </div>
         </Modal>
-
-
       </div>
     </div>
   );

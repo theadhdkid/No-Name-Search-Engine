@@ -2,12 +2,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function (fastify, opts) {
-  fastify.get('/api/user/search', async (request, reply) => {
+  fastify.get("/api/user/search", async (request, reply) => {
     let { query, category, brand, price } = request.query;
     query = query ? query.trim().toLowerCase() : "";
     category = category ? category.trim().toLowerCase() : "";
     brand = brand ? brand.trim().toLowerCase() : "";
-
 
     console.log(" API HIT: /api/user/search");
     console.log(" Received Query:", query);
@@ -20,7 +19,12 @@ export default async function (fastify, opts) {
       price = price ? Number(price) : 0;
 
       //  If no query or only spaces, return ALL items
-      if (query.length === 0 && category.length === 0 && brand.length === 0 && price == 0) {
+      if (
+        query.length === 0 &&
+        category.length === 0 &&
+        brand.length === 0 &&
+        price == 0
+      ) {
         console.log(" No search term. Returning all AI tools.");
         const allItems = await prisma.AITool.findMany(); // Fetch all items
         console.log(" Returning", allItems.length, "items.");
@@ -55,7 +59,10 @@ export default async function (fastify, opts) {
         delete searchFilter.OR;
       }
 
-      console.log("\n🔍 Prisma search filter:", JSON.stringify(searchFilter, null, 2));
+      console.log(
+        "\n🔍 Prisma search filter:",
+        JSON.stringify(searchFilter, null, 2),
+      );
 
       //  Execute the query and log results
       const results = await prisma.AITool.findMany({
@@ -72,14 +79,13 @@ export default async function (fastify, opts) {
       }
 
       return reply.status(200).send(results);
-
     } catch (error) {
       console.error(" Database error:", error);
 
       return reply.status(500).send({
-        error: 'Something went wrong',
+        error: "Something went wrong",
         details: error.message,
-        prismaStack: error.stack //  Print full Prisma error
+        prismaStack: error.stack, //  Print full Prisma error
       });
     }
   });

@@ -50,7 +50,7 @@ export default async function (fastify, opts) {
 
         // 📌 1️⃣ Add Bookmark（POST）
         if (method === "POST") {
-          const { userId, toolId } = request.body; 
+          const { userId, toolId } = request.body;
           // Check if the body contains `userId` and `toolId`
           if (!userId || !toolId) {
             return reply.status(StatusCodes.BAD_REQUEST).send({
@@ -96,7 +96,7 @@ export default async function (fastify, opts) {
 
         // 📌 2️⃣ Get user bookmarks（GET）
         if (method === "GET") {
-          const { userId } = request.query; 
+          const { userId } = request.query;
           // Check if the querystring contains `userId`
           if (!userId) {
             return reply.status(StatusCodes.BAD_REQUEST).send({
@@ -116,7 +116,7 @@ export default async function (fastify, opts) {
 
         // 📌 3️⃣ Delete Bookmarks（DELETE）
         if (method === "DELETE") {
-          const { userId, toolId } = request.query; 
+          const { userId, toolId } = request.query;
           if (!userId || !toolId) {
             return reply.status(StatusCodes.BAD_REQUEST).send({
               message: "User ID and Tool ID are required.",
@@ -156,4 +156,3 @@ export default async function (fastify, opts) {
     },
   });
 }
-

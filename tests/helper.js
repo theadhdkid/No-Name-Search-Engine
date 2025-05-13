@@ -1,9 +1,9 @@
-import Fastify from 'fastify';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import AutoLoad from '@fastify/autoload';
-import prismaPlugin from '../plugins/prisma.js'; // ✅ Import Prisma plugin
-import { PrismaClient } from '@prisma/client';
+import Fastify from "fastify";
+import path from "path";
+import { fileURLToPath } from "url";
+import AutoLoad from "@fastify/autoload";
+import prismaPlugin from "../plugins/prisma.js"; // ✅ Import Prisma plugin
+import { PrismaClient } from "@prisma/client";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,14 +21,14 @@ export async function build(t) {
 
   // loading all non-API routes (excluding `/api`) (dubug)
   app.register(AutoLoad, {
-    dir: path.join(__dirname, '../routes'),
+    dir: path.join(__dirname, "../routes"),
     ignorePattern: /api/, // prevents double-loading `api/` (redundant but a debug and it works so dont touch)
     options: {},
   });
 
   // load API routes
   app.register(AutoLoad, {
-    dir: path.join(__dirname, '../routes/api'),
+    dir: path.join(__dirname, "../routes/api"),
     options: {},
   });
 
@@ -39,9 +39,8 @@ export async function build(t) {
 
   // cleanup after each test (reset DB)
   t.afterEach(async () => {
-    await prisma.$executeRawUnsafe('DELETE FROM Favorite');
+    await prisma.$executeRawUnsafe("DELETE FROM Favorite");
   });
-
 
   // DONT UN COMMENT
   //  Cleanup after all tests
