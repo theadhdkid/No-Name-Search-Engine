@@ -52,6 +52,7 @@ export default function AccountSettings({ opened, onClose, userData }) {
         localStorage.setItem('user', JSON.stringify(newUser));
 
         if (editFirstName) userData.firstName = payload.firstName;
+        if (editLastName) userData.lastname = payload.lastName;
 
         onClose();
         // Optional: Reload user data from backend if needed
