@@ -159,7 +159,7 @@ function SearchResults() {
       {/* Sidebar */}
       <div style={{ width: "220px", background: "#d9d9d9", padding: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <img src="/logo.png" alt="Logo" style={{ width: "120px", marginBottom: "20px" }} />
-        {["Dashboard", "My Tools", "Bookmarks"].map((text) => (
+        {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
           <Button
             key={text}
             variant="filled"
@@ -169,7 +169,7 @@ function SearchResults() {
             onClick={() => {
               if (text === "Dashboard") navigate("/home");
               if (text === "Bookmarks") navigate("/bookmarks");
-              //add my tools later
+              if (text === "Tool of the Day") navigate("/tooloftheday");
             }}
           >
             {text}
