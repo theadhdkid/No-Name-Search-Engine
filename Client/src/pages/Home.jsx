@@ -104,7 +104,7 @@ function Home() {
             alt="Logo"
             style={{ width: "120px", marginBottom: "20px" }}
           />
-          {["Dashboard", "My Tools", "Bookmarks"].map((text) => (
+          {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
   <Button
     key={text}
     variant="filled"
@@ -114,7 +114,7 @@ function Home() {
     onClick={() => {
       if (text === "Dashboard") navigate("/home");
       if (text === "Bookmarks") navigate("/bookmarks");
-      //later define My Tools
+      if (text === "Tool of the Day") navigate("/tooloftheday");
     }}
   >
     {text}

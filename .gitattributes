@@ -1,0 +1,2 @@
+*.json text eol=lf
+# Fixes package-lock being replaced by CRLF

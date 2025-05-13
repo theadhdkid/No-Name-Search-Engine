@@ -21,7 +21,6 @@ function Bookmarks() {
   const fetchBookmarks = async (userId) => {
     setLoading(true);
     try {
-      //const res = await fetch(`http://localhost:5001/api/user/bookmark?userId=${userId}`);
       const res = await fetch(`/api/user/bookmark?userId=${userId}`);
       const data = await res.json();
       setBookmarks(data);
@@ -36,9 +35,9 @@ function Bookmarks() {
     if (!userData) return;
 
     try {
-      /*
-      await fetch(
-        `http://localhost:5001/api/user/bookmark?userId=${userData.id}&toolId=${toolId}`,
+      
+      /*await fetch(
+        `http://127.0.0.1:5001/api/user/bookmark?userId=${userData.id}&toolId=${toolId}`,
         { method: "DELETE" }
       );*/
       await fetch(

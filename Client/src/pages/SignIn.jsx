@@ -32,8 +32,7 @@ function SignIn() {
       localStorage.removeItem("user");
 
       //local testing!!!!
-      // const response = await fetch("http://localhost:5001/api/user/signin", {
-        const response = await fetch('/api/user/signin', {
+        const response = await fetch("/api/user/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

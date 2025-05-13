@@ -5,7 +5,7 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 export default async function (fastify, opts) {
   /**
-   * response = await fetch('api/tooloftheday')
+   * response = await fetch('/api/tooloftheday')
    * The selection is based on the current day
    * Tools are ordered by alphanumeric ID
    * @returns {Promise<Object|null>}

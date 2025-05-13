@@ -86,17 +86,15 @@ function SearchResults() {
     localStorage.setItem("searchTerm", query);
     localStorage.setItem("selectedCategory", category);
     try {
-      
+      /*
       const res = await fetch(
         `/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
       );
-      
-      // LOCAL TESTING
-      /*
+      */
+
        const res = await fetch(
-         `http://localhost:5001/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
+         `/api/user/search?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`
        ); 
-       */
       const data = await res.json();
       console.log(" Search API response:", data);
       setResults(Array.isArray(data) ? data : []);
@@ -354,9 +352,8 @@ function SearchResults() {
             mt="md"
             onClick={async () => {
               try {
-                // await fetch("http://localhost:5001/api/reviews", { LOCAL TESTING
-                  await fetch('/api/reviews', {
-                    method: "POST",
+                await fetch("/api/reviews", {
+                  method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
                     userId: userData?.id,
