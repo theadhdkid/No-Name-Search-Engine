@@ -65,7 +65,6 @@ function Home() {
   // Updated fetchSearchResults function to only navigate to the search results page
   const fetchSearchResults = () => {
     const cleanedSearchTerm = searchTerm.trim();
-    if (!cleanedSearchTerm) return;
 
     // Save to localStorage for search results
     localStorage.setItem("searchTerm", cleanedSearchTerm);
@@ -242,12 +241,13 @@ function Home() {
             <Select
               placeholder="All Categories"
               data={[
-                "Academics",
-                "Research",
-                "Career",
-                "Writing Tools",
-                "Mental Health",
-                "Creativity",
+                "Computer Vision",
+                "Machine Learning & Data Science",
+                "Natural Language Processing",
+                "Speech Recognition & Synthesis",
+                "AI for Finance",
+                "AI for Gaming",
+                "AI-Powered Productivity"
               ]}
               value={selectedCategory}
               onChange={setSelectedCategory}
