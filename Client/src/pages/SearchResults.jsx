@@ -155,13 +155,12 @@ function SearchResults() {
 
   // List of available categories
   const categories = [
-    "Computer Vision",
-    "Machine Learning & Data Science",
-    "Natural Language Processing",
-    "Speech Recognition & Synthesis",
-    "AI for Finance",
-    "AI for Gaming",
-    "AI-Powered Productivity"
+    "Academics",
+    "Research",
+    "Career",
+    "Writing Tools",
+    "Mental Health",
+    "Creativity",
   ];
 
   // Rating filter options

@@ -267,13 +267,12 @@ function Home() {
             <Select
               placeholder="All Categories"
               data={[
-                "Computer Vision",
-                "Machine Learning & Data Science",
-                "Natural Language Processing",
-                "Speech Recognition & Synthesis",
-                "AI for Finance",
-                "AI for Gaming",
-                "AI-Powered Productivity"
+                "Academic" ,
+                "Research",
+                "Career",
+                "Writting Tools",
+                "Mental Health",
+                "Creativity"
               ]}
               value={selectedCategory}
               onChange={setSelectedCategory}
