@@ -43,6 +43,16 @@ export default function AccountSettings({ opened, onClose, userData }) {
 
       if (res.ok) {
         alert("Profile updated!");
+
+        var newUser = JSON.parse(localStorage.getItem("user"));
+
+        if (editFirstName) newUser['firstName'] = payload.firstName;
+        if (editLastName) newUser['lastName'] = payload.lastName;
+
+        localStorage.setItem('user', JSON.stringify(newUser));
+
+        if (editFirstName) userData.firstName = payload.firstName;
+
         onClose();
         // Optional: Reload user data from backend if needed
       } else {
