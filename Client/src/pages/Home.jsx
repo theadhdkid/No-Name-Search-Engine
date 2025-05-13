@@ -104,21 +104,22 @@ function Home() {
         userData={userData}
       />
 
-      <div
-        style={{
-          backgroundColor:
-            theme === "dark"
-              ? "#1a1a1a"
-              : theme === "light"
-                ? "#f4f4f4"
-                : theme, // treat theme as color code if not light/dark
-          color: theme === "dark" ? "#ffffff" : "#000000",
-          display: "flex",
-          height: "100vh",
-          width: "100vw",
-          overflow: "hidden",
-        }}
-      >
+<div
+  style={{
+    backgroundColor:
+      theme === "dark"
+        ? "#1a1a1a"
+        : theme === "light"
+        ? "#f4f4f4"
+        : theme,
+    color: theme === "dark" ? "#ffffff" : "#000000",
+    display: "flex",
+    minHeight: "100vh",   // allowed bigger pages
+    width: "100vw",
+    overflowY: "auto",    // enabled scrolling
+  }}
+>
+
         {/* Sidebar */}
         <div
           style={{
