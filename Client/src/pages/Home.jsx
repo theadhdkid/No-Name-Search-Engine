@@ -12,6 +12,8 @@ import {
 } from "@mantine/core";
 import { useState, useEffect } from "react";
 import CustomizeSettings from "../components/CustomizeSettings";
+import AIchat from "../components/AIchat";
+
 
 
 
@@ -175,10 +177,24 @@ function Home() {
           )}
   
           {/* Greeting */}
-          <Title order={2} style={{ marginBottom: "10px" }}>
-            Hello Again, {userData?.firstName || "User"}!
-          </Title>
-  
+          <Title
+  order={2}
+  style={{
+    marginBottom: "10px",
+    fontFamily: "'Montserrat', sans-serif",
+    fontWeight: 700,
+    fontSize: "26px",
+    color: theme === "dark" ? "#ffffff" : "#000000",
+  }}
+>
+  Hello Again,{" "}
+  <span style={{ color: theme === "dark" ? "#ffffff" : "#000000" }}>
+    {userData?.firstName || "User"}!
+  </span>
+</Title>
+
+
+
           {/* Search */}
           <div
             style={{
@@ -191,17 +207,12 @@ function Home() {
             <Select
               placeholder="All Categories"
               data={[
-                "AI Code Generation",
-                "AI for Cybersecurity",
-                "AI for Finance",
-                "AI for Gaming",
-                "AI for Healthcare",
-                "AI-Powered Productivity",
-                "Computer Vision",
-                "Generative AI",
-                "Machine Learning & Data Science",
-                "Natural Language Processing (NLP)",
-                "Speech Recognition & Synthesis",
+                "Academics",
+                "Research",
+                "Career",
+                "Writing Tools",
+                "Mental Health",
+                "Creativity",
               ]}
               value={selectedCategory}
               onChange={setSelectedCategory}
@@ -233,7 +244,7 @@ function Home() {
   shadow="xs"
   mb="lg"
   style={{
-    backgroundColor: theme === "dark" ? "#333" : "#d3d3d3", // ✅ updated for dark mode
+    backgroundColor: theme === "dark" ? "#333" : "#d3d3d3", // updated for dark mode
     borderRadius: "6px",
     color: theme === "dark" ? "#ffffff" : "#000000", // Optional: ensure inner text is also visible
   }}
@@ -248,7 +259,7 @@ function Home() {
         <div
           key={index}
           style={{
-            background: theme === "dark" ? "#444" : "white", // ✅ light cards even in dark mode
+            background: theme === "dark" ? "#444" : "white", // light cards even in dark mode
             padding: "12px 20px",
             borderRadius: "4px",
             display: "flex",
@@ -275,7 +286,9 @@ function Home() {
     )}
   </div>
 </Paper>
-
+<div style={{ marginTop: "2rem" }}>
+  <AIchat theme={theme} />
+</div>
         </div> 
       </div> 
     </>
