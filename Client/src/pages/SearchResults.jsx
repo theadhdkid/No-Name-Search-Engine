@@ -136,12 +136,11 @@ function SearchResults() {
 
   // List of available categories
   const categories = [
-    "Writing",
-    "Career",
-    "Academics",
-    "Research",
-    "Mental Health",
-    "Creativity",
+    "Computer Vision",
+    "Machine Learning & Data Science",
+    "Natural Language Processing",
+    "Speech Recognition & Synthesis",
+    "AI for Finance",
     "AI for Gaming",
     "AI-Powered Productivity"
   ];
@@ -201,7 +200,7 @@ function SearchResults() {
             color="gray"
             style={{
               color: "black",
-              background: selectedCategory === cat ? "#b0b0b0" : "#e0e0e0"
+              background: selectedCategory === cat ? "#b0b0b0" : "#e0e0e0",
             }}
             fullWidth
             onClick={() => {
@@ -332,7 +331,13 @@ function SearchResults() {
         </Title>
 
         {/* Search Results */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "20px",
+          }}
+        >
           {results.map((item) => (
             <ArticleCard
               key={item.id || item.name}
