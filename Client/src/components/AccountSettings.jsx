@@ -28,6 +28,7 @@ export default function AccountSettings({ opened, onClose, userData }) {
       payload.oldPassword = oldPassword;
       payload.newPassword = newPassword;
     }
+    payload.oldEmail = JSON.parse(localStorage.getItem("user")).email;
 
     if (Object.keys(payload).length === 0) {
       alert("No changes to save.");
@@ -48,11 +49,13 @@ export default function AccountSettings({ opened, onClose, userData }) {
 
         if (editFirstName) newUser['firstName'] = payload.firstName;
         if (editLastName) newUser['lastName'] = payload.lastName;
+        if (editEmail) newUser['email'] = email;
 
         localStorage.setItem('user', JSON.stringify(newUser));
 
         if (editFirstName) userData.firstName = payload.firstName;
         if (editLastName) userData.lastname = payload.lastName;
+        if (editEmail) userData.email = payload.email;
 
         onClose();
         // Optional: Reload user data from backend if needed
