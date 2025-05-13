@@ -5,13 +5,15 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function (fastify, opts) {
-  fastify.post('/api/user/update-profile', {
+  fastify.patch('/api/user/update-profile', {
     schema: {
       // The update profile route will update the user's info with the provided fields
       body: {
         type: 'object',
         // The properties of the request body
         properties: {
+            // The email of the user
+            oldEmail: { type: 'string', format: 'email', nullable: true },
             // The email of the user
             email: { type: 'string', format: 'email', nullable: true },
             // The first name of the user
@@ -22,9 +24,7 @@ export default async function (fastify, opts) {
             oldPassword: { type: 'string', minLength: 6, nullable: true },
             // The new password of the user (if changing password)
             newPassword: { type: 'string', minLength: 6, nullable: true }
-          },
-        // The required fields of the request body
-        required: ['email'] 
+          }
       },
       // The response of the route
       response: {
@@ -62,11 +62,11 @@ export default async function (fastify, opts) {
     }
   }, async function (request, reply) {
     // The request body
-    const { email, firstName, lastName, oldPassword, newPassword } = request.body;
+    const { oldEmail, email, firstName, lastName, oldPassword, newPassword } = request.body;
 
     // Retrieve the user from the database using the provided email
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: oldEmail },
     });
 
     // If no user is found, respond with a Bad Request status
@@ -75,7 +75,6 @@ export default async function (fastify, opts) {
         message: 'User not found.'
       });
     }
-
     
     // Check if a new password is provided
     if (newPassword) {
@@ -97,7 +96,7 @@ export default async function (fastify, opts) {
       // Hash the new password and update the user's password in the database
       const hashedNewPassword = await bcrypt.hash(newPassword, 10);
       await prisma.user.update({
-        where: { email },
+        where: { email: oldEmail },
         data: { hashedPassword: hashedNewPassword }
       });
     }
@@ -112,7 +111,7 @@ export default async function (fastify, opts) {
     if (Object.keys(updateData).length > 0) {
       // Update the user
       await prisma.user.update({
-        where: { email },
+        where: { email: oldEmail },
         data: updateData
       });
     }

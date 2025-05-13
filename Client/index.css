@@ -1,6 +1,12 @@
 /* IMPORTING FONT */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;900&display=swap");
 
+/* GLOBAL RESET */
+* {
+  box-sizing: border-box;
+}
+
+
 /* BODY */
 body {
   background-color: #2d2b55;

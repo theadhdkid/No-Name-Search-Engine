@@ -6,7 +6,7 @@ import {
   Group,
   Text,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AccountSettings({ opened, onClose, userData }) {
   const [editFirstName, setEditFirstName] = useState(false);
@@ -18,7 +18,16 @@ export default function AccountSettings({ opened, onClose, userData }) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  useEffect(() => {
+    if (userData) {
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setEmail(userData.email);
+    }
+  }, [userData]);
+
   const handleSave = async () => {
+    console.log("userData/AccountSettings", userData);
     const payload = {};
 
     if (editFirstName) payload.firstName = firstName;
@@ -28,6 +37,7 @@ export default function AccountSettings({ opened, onClose, userData }) {
       payload.oldPassword = oldPassword;
       payload.newPassword = newPassword;
     }
+    payload.oldEmail = JSON.parse(localStorage.getItem("user")).email;
 
     if (Object.keys(payload).length === 0) {
       alert("No changes to save.");
@@ -36,13 +46,26 @@ export default function AccountSettings({ opened, onClose, userData }) {
 
     try {
       const res = await fetch("/api/user/update-profile", {
-        method: "POST",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
         alert("Profile updated!");
+
+        var newUser = JSON.parse(localStorage.getItem("user"));
+
+        if (editFirstName) newUser['firstName'] = payload.firstName;
+        if (editLastName) newUser['lastName'] = payload.lastName;
+        if (editEmail) newUser['email'] = email;
+
+        localStorage.setItem('user', JSON.stringify(newUser));
+
+        if (editFirstName) userData.firstName = payload.firstName;
+        if (editLastName) userData.lastname = payload.lastName;
+        if (editEmail) userData.email = payload.email;
+
         onClose();
         // Optional: Reload user data from backend if needed
       } else {

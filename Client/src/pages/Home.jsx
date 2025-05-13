@@ -35,22 +35,28 @@ function Home() {
 
   const [recentSearches, setRecentSearches] = useState([]);
 
-
   //removed hardcoded user
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    /*
     if (storedUser) {
       setUserData(JSON.parse(storedUser));
+      console.log("User data:", storedUser);
+    }*/
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserData(parsedUser);
+      console.log("User data:", parsedUser);
     }
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       setTheme(savedTheme);
     }
 
-    const storedSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    const storedSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
     setRecentSearches(storedSearches);
   }, []);
-
 
   const userInitials = userData
     ? `${userData.firstName[0]}${userData.lastName[0]}`
@@ -59,7 +65,6 @@ function Home() {
   // Updated fetchSearchResults function to only navigate to the search results page
   const fetchSearchResults = () => {
     const cleanedSearchTerm = searchTerm.trim();
-    if (!cleanedSearchTerm) return;
 
     // Save to localStorage for search results
     localStorage.setItem("searchTerm", cleanedSearchTerm);
@@ -83,9 +88,6 @@ function Home() {
     navigate("/SearchResults");
   };
 
-
-
-
   return (
     <>
       <CustomizeSettings
@@ -102,21 +104,22 @@ function Home() {
         userData={userData}
       />
 
-      <div
-        style={{
-          backgroundColor:
-            theme === "dark"
-              ? "#1a1a1a"
-              : theme === "light"
-                ? "#f4f4f4"
-                : theme, // treat theme as color code if not light/dark
-          color: theme === "dark" ? "#ffffff" : "#000000",
-          display: "flex",
-          height: "100vh",
-          width: "100vw",
-          overflow: "hidden",
-        }}
-      >
+<div
+  style={{
+    backgroundColor:
+      theme === "dark"
+        ? "#1a1a1a"
+        : theme === "light"
+        ? "#f4f4f4"
+        : theme,
+    color: theme === "dark" ? "#ffffff" : "#000000",
+    display: "flex",
+    minHeight: "100vh",   // allowed bigger pages
+    width: "100vw",
+    overflowY: "auto",    // enabled scrolling
+  }}
+>
+
         {/* Sidebar */}
         <div
           style={{
@@ -239,12 +242,13 @@ function Home() {
             <Select
               placeholder="All Categories"
               data={[
-                "Academics",
-                "Research",
-                "Career",
-                "Writing Tools",
-                "Mental Health",
-                "Creativity",
+                "Computer Vision",
+                "Machine Learning & Data Science",
+                "Natural Language Processing",
+                "Speech Recognition & Synthesis",
+                "AI for Finance",
+                "AI for Gaming",
+                "AI-Powered Productivity"
               ]}
               value={selectedCategory}
               onChange={setSelectedCategory}
@@ -335,7 +339,6 @@ function Home() {
                   No recent searches yet.
                 </Text>
               )}
-
             </div>
           </Paper>
           <div style={{ marginTop: "2rem" }}>
