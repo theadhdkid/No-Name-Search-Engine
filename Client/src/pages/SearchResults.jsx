@@ -23,6 +23,7 @@ function SearchResults() {
   const navigate = useNavigate();
 
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedRating, setSelectedRating] = useState("");
   const [theme, setTheme] = useState("light");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -69,8 +70,10 @@ function SearchResults() {
       setTheme(savedTheme);
     }
 
+    // Retrieve saved filters from localStorage
     const storedSearchTerm = localStorage.getItem("searchTerm");
     const storedCategory = localStorage.getItem("selectedCategory");
+    const storedRating = localStorage.getItem("selectedRating");
 
     if (storedSearchTerm) {
       setSearchTerm(storedSearchTerm);
@@ -78,17 +81,22 @@ function SearchResults() {
     if (storedCategory) {
       setSelectedCategory(storedCategory);
     }
+    if (storedRating) {
+      setSelectedRating(storedRating);
+    }
 
-    fetchResults(storedSearchTerm, storedCategory);
+    fetchResults(storedSearchTerm, storedCategory, storedRating);
   }, []);
 
-  const fetchResults = async (query, category) => {
+  const fetchResults = async (query, category, rating) => {
     setLoading(true);
+    // Save search parameters to localStorage
     localStorage.setItem("searchTerm", query || "");
     localStorage.setItem("selectedCategory", category || "");
+    localStorage.setItem("selectedRating", rating || "");
 
     try {
-      const url = `/api/user/search?query=${encodeURIComponent(query || "")}&category=${encodeURIComponent(category || "")}`;
+      const url = `/api/user/search?query=${encodeURIComponent(query || "")}&category=${encodeURIComponent(category || "")}&minRating=${encodeURIComponent(rating || "")}`;
       const res = await fetch(url);
       const data = await res.json();
       console.log("Search API response:", data);
@@ -148,6 +156,15 @@ function SearchResults() {
     "AI for Finance",
     "AI for Gaming",
     "AI-Powered Productivity"
+  ];
+
+  // Rating filter options
+  const ratingOptions = [
+    { value: "5", label: "⭐⭐⭐⭐⭐ (5 stars)" },
+    { value: "4", label: "⭐⭐⭐⭐ (4+ stars)" },
+    { value: "3", label: "⭐⭐⭐ (3+ stars)" },
+    { value: "2", label: "⭐⭐ (2+ stars)" },
+    { value: "1", label: "⭐ (1+ star)" }
   ];
 
   return (
@@ -231,7 +248,7 @@ function SearchResults() {
               onClick={() => {
                 const newCategory = selectedCategory === cat ? "" : cat;
                 setSelectedCategory(newCategory);
-                fetchResults(searchTerm, newCategory);
+                fetchResults(searchTerm, newCategory, selectedRating);
               }}
             >
               {cat}
@@ -292,7 +309,7 @@ function SearchResults() {
                 style={{ flex: 1, background: "white", borderRadius: "5px" }}
               />
               <Button
-                onClick={() => fetchResults(searchTerm, selectedCategory)}
+                onClick={() => fetchResults(searchTerm, selectedCategory, selectedRating)}
                 disabled={loading}
                 style={{ backgroundColor: "black", color: "white" }}
               >
@@ -327,22 +344,34 @@ function SearchResults() {
                 value={selectedCategory}
                 onChange={(value) => {
                   setSelectedCategory(value);
-                  fetchResults(searchTerm, value);
+                  fetchResults(searchTerm, value, selectedRating);
+                }}
+                size="xs"
+                clearable
+              />
+
+              <Select
+                placeholder="Rating"
+                data={ratingOptions}
+                value={selectedRating}
+                onChange={(value) => {
+                  setSelectedRating(value);
+                  fetchResults(searchTerm, selectedCategory, value);
                 }}
                 size="xs"
                 clearable
               />
             </div>
 
-            {selectedCategory && (
-              <div
-                style={{
-                  display: "flex",
-                  gap: "6px",
-                  marginTop: "6px",
-                  flexWrap: "wrap",
-                }}
-              >
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                marginTop: "6px",
+                flexWrap: "wrap",
+              }}
+            >
+              {selectedCategory && (
                 <Chip
                   variant="light"
                   color="gray"
@@ -350,13 +379,28 @@ function SearchResults() {
                   checked
                   onClose={() => {
                     setSelectedCategory("");
-                    fetchResults(searchTerm, "");
+                    fetchResults(searchTerm, "", selectedRating);
                   }}
                 >
                   {selectedCategory}
                 </Chip>
-              </div>
-            )}
+              )}
+
+              {selectedRating && (
+                <Chip
+                  variant="light"
+                  color="yellow"
+                  size="xs"
+                  checked
+                  onClose={() => {
+                    setSelectedRating("");
+                    fetchResults(searchTerm, selectedCategory, "");
+                  }}
+                >
+                  {ratingOptions.find(option => option.value === selectedRating)?.label || `${selectedRating}+ stars`}
+                </Chip>
+              )}
+            </div>
           </Paper>
 
           {/* Result Count */}
@@ -383,6 +427,7 @@ function SearchResults() {
                 onClickRating={() => handleViewReviews(item.id)}
                 onBookmark={() => handleAddBookmark(item)}
                 onReview={() => openReviewModal(item.id)}
+                rating={item.averageRating || 0} // Pass the average rating to display in the card
               />
             ))}
           </div>

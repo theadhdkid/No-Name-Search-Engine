@@ -23,6 +23,7 @@ async function main() {
         hashedPassword: hashedPassword2,
       },
     ],
+    skipDuplicates: true,
   });
 
   // AI generated seed AI tools
@@ -375,6 +376,7 @@ async function main() {
         imageUrl: "https://example.com/boomy.png",
       },
     ],
+    skipDuplicates: true,
   });
 
   console.log("✅ Database seeded with test users!");
