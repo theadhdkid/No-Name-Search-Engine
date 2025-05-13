@@ -13,6 +13,8 @@ import {
 import { useState, useEffect } from "react";
 import CustomizeSettings from "../components/CustomizeSettings";
 import AIchat from "../components/AIchat";
+import AccountSettings from "../components/AccountSettings";
+
 
 
 
@@ -22,6 +24,8 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [accountOpen, setAccountOpen] = useState(false);
+
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [theme, setTheme] = useState("light"); // for storing default theme
@@ -72,6 +76,12 @@ function Home() {
   onThemeChange={handleThemeChange}
   customColor={customColor}
   setCustomColor={setCustomColor}
+      />
+    
+    <AccountSettings
+  opened={accountOpen}
+  onClose={() => setAccountOpen(false)}
+  userData={userData}
       />
   
   <div
@@ -160,7 +170,7 @@ function Home() {
   <Menu.Dropdown>
     <Menu.Item onClick={() => setSettingsOpen(true)}>Customize Settings</Menu.Item>
     <Menu.Item>Help</Menu.Item>
-    <Menu.Item>Account Settings</Menu.Item>
+    <Menu.Item onClick={() => setAccountOpen(true)}>Account Settings</Menu.Item>
     <Menu.Item
       color="red"
       onClick={() => {
