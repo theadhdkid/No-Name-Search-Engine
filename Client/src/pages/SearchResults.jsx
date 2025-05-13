@@ -221,7 +221,7 @@ function SearchResults() {
             alt="Logo"
             style={{ width: "120px", marginBottom: "20px" }}
           />
-          {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
+          {["Dashboard", "Tool of the Day"].map((text) => (
             <Button
               key={text}
               variant="filled"
