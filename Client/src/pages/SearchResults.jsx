@@ -118,7 +118,7 @@ function SearchResults() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: user.id,
+          userId: user.userId,
           toolId: tool.id,
         }),
       });
