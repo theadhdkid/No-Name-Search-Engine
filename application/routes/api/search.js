@@ -2,32 +2,47 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function (fastify, opts) {
-  fastify.get('/api/user/search', async (request, reply) => {
-    let { query, category, brand, price } = request.query;
+  fastify.get("/api/user/search", async (request, reply) => {
+    let { query, category, brand, price, minRating } = request.query;
+
+    // Sanitize inputs
     query = query ? query.trim().toLowerCase() : "";
     category = category ? category.trim().toLowerCase() : "";
     brand = brand ? brand.trim().toLowerCase() : "";
+    price = price ? Number(price) : 0;
+    minRating = minRating ? Number(minRating) : 0;
 
-
-    console.log(" API HIT: /api/user/search");
-    console.log(" Received Query:", query);
+    console.log("🌐 API HIT: /api/user/search");
+    console.log("🔎 Received Query:", { query, category, brand, price, minRating });
 
     try {
-      //  Ensure query is a string before calling `.trim()`
-      query = query ? query.trim() : "";
-      category = category ? category.trim() : "";
-      brand = brand ? brand.trim() : "";
-      price = price ? Number(price) : 0;
+      // If all fields are empty, return all tools
+      if (
+        query.length === 0 &&
+        category.length === 0 &&
+        brand.length === 0 &&
+        price === 0 &&
+        minRating === 0
+      ) {
+        console.log("📦 No search filters. Returning all AI tools.");
+        const allItems = await prisma.AITool.findMany({
+          include: { reviews: true },
+        });
 
-      //  If no query or only spaces, return ALL items
-      if (query.length === 0 && category.length === 0 && brand.length === 0 && price == 0) {
-        console.log(" No search term. Returning all AI tools.");
-        const allItems = await prisma.AITool.findMany(); // Fetch all items
-        console.log(" Returning", allItems.length, "items.");
-        return reply.status(200).send(allItems);
+        const withRatings = allItems.map((tool) => {
+          const ratings = tool.reviews.map((r) => r.rating);
+          const averageRating =
+            ratings.length > 0
+              ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+              : 0;
+          return { ...tool, averageRating: parseFloat(averageRating.toFixed(1)) };
+        });
+
+        console.log("✅ Returning", withRatings.length, "items.");
+        return reply.status(200).send(withRatings);
       }
 
-      //  Build search filter dynamically
+      // Build dynamic search filter
       const searchFilter = {
         OR: [],
         AND: [],
@@ -51,35 +66,51 @@ export default async function (fastify, opts) {
         searchFilter.AND.push({ minPrice: { lte: price } });
       }
 
-      if (searchFilter.OR.length == 0) {
+      if (searchFilter.OR.length === 0) {
         delete searchFilter.OR;
       }
 
-      console.log("\n🔍 Prisma search filter:", JSON.stringify(searchFilter, null, 2));
+      console.log("🔍 Prisma search filter:", JSON.stringify(searchFilter, null, 2));
 
-      //  Execute the query and log results
+      // Fetch from database
       const results = await prisma.AITool.findMany({
         where: searchFilter,
         include: {
-          reviews: true, // include all reviews for each tool
+          reviews: true,
         },
       });
-      console.log(" Prisma returned:", results.length, "results\n", results);
 
-      // Send 404 Not Found if no results were found
-      if (results.length == 0) {
-        reply.status(404).send("Not Found");
-      }
+      console.log("📄 Prisma returned:", results.length, "results");
 
-      return reply.status(200).send(results);
+      // Calculate average rating & filter by minRating
+      const filteredResults = results
+        .map((tool) => {
+          const ratings = tool.reviews.map((r) => r.rating);
+          const averageRating =
+            ratings.length > 0
+              ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+              : 0;
+          return {
+            ...tool,
+            averageRating: parseFloat(averageRating.toFixed(1))
+          };
+        })
+        .filter((tool) => {
+          // Log for debugging
+          console.log(`Tool: ${tool.name}, Average Rating: ${tool.averageRating}, Min Rating: ${minRating}`);
+          return tool.averageRating >= minRating;
+        });
 
+      console.log("⭐ Filtered by rating:", filteredResults.length, "tools returned.");
+
+      return reply.status(200).send(filteredResults);
     } catch (error) {
-      console.error(" Database error:", error);
+      console.error("❌ Database error:", error);
 
       return reply.status(500).send({
-        error: 'Something went wrong',
+        error: "Something went wrong",
         details: error.message,
-        prismaStack: error.stack //  Print full Prisma error
+        prismaStack: error.stack,
       });
     }
   });

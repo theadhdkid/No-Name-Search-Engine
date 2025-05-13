@@ -1,7 +1,5 @@
-import fp from 'fastify-plugin';
-import { PrismaClient } from '@prisma/client';
-
-
+import fp from "fastify-plugin";
+import { PrismaClient } from "@prisma/client";
 
 // DO NOT TOUCH
 
@@ -12,7 +10,7 @@ const prismaPlugin = fp(async (fastify) => {
   const prisma = new PrismaClient({
     datasources: {
       db: {
-        url: databaseUrl,  // This will use the correct URL
+        url: databaseUrl, // This will use the correct URL
       },
     },
   });
@@ -20,9 +18,9 @@ const prismaPlugin = fp(async (fastify) => {
   await prisma.$connect();
 
   // Make Prisma Client available through the Fastify server instance: fastify.prisma
-  fastify.decorate('prisma', prisma);
+  fastify.decorate("prisma", prisma);
 
-  fastify.addHook('onClose', async () => {
+  fastify.addHook("onClose", async () => {
     await prisma.$disconnect();
   });
 });

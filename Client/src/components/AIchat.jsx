@@ -35,20 +35,29 @@ export default function AIChat({ theme }) {
   };
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px", backgroundColor: theme === "dark" ? "#1e1e1e" : "#f5f5f5",
-        color: theme === "dark" ? "#ffffff" : "#000000", }}>
-    <h3
-  style={{
-    fontFamily: "'Montserrat', sans-serif",
-    fontWeight: 700,
-    fontSize: "20px",
-    marginBottom: "1rem"
-  }}
->
-  Ask the No Name AI Assistant
-</h3>
+    <div
+      style={{
+        border: "1px solid #ccc",
+        padding: "1rem",
+        borderRadius: "8px",
+        backgroundColor: theme === "dark" ? "#1e1e1e" : "#f5f5f5",
+        color: theme === "dark" ? "#ffffff" : "#000000",
+      }}
+    >
+      <h3
+        style={{
+          fontFamily: "'Montserrat', sans-serif",
+          fontWeight: 700,
+          fontSize: "20px",
+          marginBottom: "1rem",
+        }}
+      >
+        Ask the No Name AI Assistant
+      </h3>
 
-      <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "1rem" }}>
+      <div
+        style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "1rem" }}
+      >
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -57,7 +66,8 @@ export default function AIChat({ theme }) {
               margin: "0.5rem 0",
             }}
           >
-            <strong>{msg.role === "user" ? "You" : "No Name"}:</strong> {msg.content}
+            <strong>{msg.role === "user" ? "You" : "No Name"}:</strong>{" "}
+            {msg.content}
           </div>
         ))}
       </div>
@@ -70,11 +80,15 @@ export default function AIChat({ theme }) {
           placeholder="What's up?"
           style={{ flex: 1, padding: "0.5rem" }}
         />
-        <button onClick={handleSend} disabled={loading} style={{ padding: "0.5rem 1rem" }}>
+        <button
+          onClick={handleSend}
+          disabled={loading}
+          style={{ padding: "0.5rem 1rem" }}
+        >
           {loading ? "..." : "ASK"}
         </button>
       </div>
     </div>
   );
 }
-``
+``;

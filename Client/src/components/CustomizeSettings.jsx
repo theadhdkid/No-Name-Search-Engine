@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import { Modal, Button, Select, Title, Text, Box } from "@mantine/core";
 
 const PRESET_COLORS = [
-  "#f4f4f4", "#1a1a1a", "#ff6f61", "#6a5acd", "#20c997",
-  "#ffcc00", "#00bcd4", "#f06292", "#4caf50", "#ff7043"
+  "#f4f4f4",
+  "#1a1a1a",
+  "#ff6f61",
+  "#6a5acd",
+  "#20c997",
+  "#ffcc00",
+  "#00bcd4",
+  "#f06292",
+  "#4caf50",
+  "#ff7043",
 ];
 
 function CustomizeSettings({ opened, onClose, onThemeChange }) {
@@ -27,7 +35,12 @@ function CustomizeSettings({ opened, onClose, onThemeChange }) {
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Customize Your Theme" centered>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title="Customize Your Theme"
+      centered
+    >
       <Title order={4} style={{ marginBottom: "12px" }}>
         Choose a Theme
       </Title>
@@ -46,8 +59,17 @@ function CustomizeSettings({ opened, onClose, onThemeChange }) {
 
       {selectedTheme === "custom" && (
         <>
-          <Text size="sm" mb="xs">Pick a Color:</Text>
-          <Box style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "1rem" }}>
+          <Text size="sm" mb="xs">
+            Pick a Color:
+          </Text>
+          <Box
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "10px",
+              marginBottom: "1rem",
+            }}
+          >
             {PRESET_COLORS.map((color) => (
               <div
                 key={color}
@@ -58,7 +80,10 @@ function CustomizeSettings({ opened, onClose, onThemeChange }) {
                   height: "30px",
                   borderRadius: "50%",
                   cursor: "pointer",
-                  border: customColor === color ? "2px solid black" : "1px solid #ccc"
+                  border:
+                    customColor === color
+                      ? "2px solid black"
+                      : "1px solid #ccc",
                 }}
               />
             ))}

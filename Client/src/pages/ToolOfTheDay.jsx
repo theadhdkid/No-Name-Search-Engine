@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArticleCard } from '../components/ArticleCard';
-import { Modal, Rating, Textarea, Button, Paper, Text, Loader, Title, ActionIcon } from '@mantine/core';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArticleCard } from "../components/ArticleCard";
+import {
+  Modal,
+  Rating,
+  Textarea,
+  Button,
+  Paper,
+  Text,
+  Loader,
+  Title,
+  ActionIcon,
+} from "@mantine/core";
 
 // Defined colors
-const PAGE_BACKGROUND_COLOR = '#121212'; // Black grey
-const TEXT_COLOR = '#F0F0F0'; // Grey white
-const RETURN_BUTTON_BG_COLOR = '#003366'; // Dark blue
+const PAGE_BACKGROUND_COLOR = "#121212"; // Black grey
+const TEXT_COLOR = "#F0F0F0"; // Grey white
+const RETURN_BUTTON_BG_COLOR = "#003366"; // Dark blue
 
 function ToolOfTheDay() {
   const navigate = useNavigate();
@@ -38,8 +48,12 @@ function ToolOfTheDay() {
       try {
         const response = await fetch(`/api/tooloftheday`); // Fetch daily tool
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: response.statusText }));
-          throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+          const errorData = await response
+            .json()
+            .catch(() => ({ error: response.statusText }));
+          throw new Error(
+            errorData.error || `HTTP error! Status: ${response.status}`,
+          );
         }
         const data = await response.json();
         if (data && data.id) {
@@ -63,8 +77,8 @@ function ToolOfTheDay() {
   // Handlers
   const openReviewModalHandler = (toolId) => {
     if (!userData) {
-        alert("Please log in to leave a review.");
-        return;
+      alert("Please log in to leave a review.");
+      return;
     }
     setCurrentReviewToolId(toolId);
     setReviewModalOpen(true);
@@ -74,11 +88,12 @@ function ToolOfTheDay() {
 
   const submitReviewHandler = async () => {
     if (!currentReviewToolId || !userData) {
-        alert("Error: Tool ID or User ID missing.");
-        return;
+      alert("Error: Tool ID or User ID missing.");
+      return;
     }
     try {
-      const res = await fetch(`/api/reviews`, { // Fetch reviews
+      const res = await fetch(`/api/reviews`, {
+        // Fetch reviews
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,7 +104,9 @@ function ToolOfTheDay() {
         }),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: "Failed to submit review" }));
+        const errorData = await res
+          .json()
+          .catch(() => ({ message: "Failed to submit review" }));
         throw new Error(errorData.message);
       }
       setReviewModalOpen(false);
@@ -106,7 +123,9 @@ function ToolOfTheDay() {
     try {
       const res = await fetch(`/api/reviews?toolId=${toolId}`); // Fetch reviews
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: "Failed to fetch reviews" }));
+        const errorData = await res
+          .json()
+          .catch(() => ({ message: "Failed to fetch reviews" }));
         throw new Error(errorData.message);
       }
       const data = await res.json();
@@ -122,11 +141,12 @@ function ToolOfTheDay() {
 
   const handleAddBookmarkHandler = async (toolItem) => {
     if (!userData || !toolItem.id) {
-        alert("Please log in to bookmark a tool.");
-        return;
+      alert("Please log in to bookmark a tool.");
+      return;
     }
     try {
-      const res = await fetch(`/api/user/bookmark`, { // Fetch bookmark
+      const res = await fetch(`/api/user/bookmark`, {
+        // Fetch bookmark
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -150,25 +170,24 @@ function ToolOfTheDay() {
   const pageStyle = {
     backgroundColor: PAGE_BACKGROUND_COLOR,
     color: TEXT_COLOR,
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
-    position: 'relative',
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "20px",
+    position: "relative",
   };
 
   // Return Button Styling
   const returnButtonStyle = {
-    position: 'absolute',
-    top: '20px',
-    left: '20px',
+    position: "absolute",
+    top: "20px",
+    left: "20px",
     backgroundColor: RETURN_BUTTON_BG_COLOR,
     color: TEXT_COLOR,
-    border: 'none',
-    fontSize: '20px',
+    border: "none",
+    fontSize: "20px",
   };
-
 
   // Tool of the Day Rendering
   let content;
@@ -176,13 +195,13 @@ function ToolOfTheDay() {
     content = (
       <>
         <Loader color="gray" />
-        <p style={{ marginTop: '10px' }}>Loading Tool of the Day...</p>
+        <p style={{ marginTop: "10px" }}>Loading Tool of the Day...</p>
       </>
     );
   } else if (error) {
-    content = <p style={{ color: 'red', marginTop: '20px' }}>Error: {error}</p>;
+    content = <p style={{ color: "red", marginTop: "20px" }}>Error: {error}</p>;
   } else if (!tool) {
-    content = <p style={{ marginTop: '20px' }}>No tool available for today.</p>;
+    content = <p style={{ marginTop: "20px" }}>No tool available for today.</p>;
   } else {
     content = (
       <ArticleCard
@@ -204,14 +223,22 @@ function ToolOfTheDay() {
       <ActionIcon
         variant="filled"
         size="lg"
-        onClick={() => navigate('/home')}
+        onClick={() => navigate("/home")}
         style={returnButtonStyle}
         aria-label="Return to home"
       >
-        {'\u2190'}
+        {"\u2190"}
       </ActionIcon>
 
-      <Title order={1} style={{ color: TEXT_COLOR, textAlign: 'center', marginBottom: '30px', marginTop: '10px' }}>
+      <Title
+        order={1}
+        style={{
+          color: TEXT_COLOR,
+          textAlign: "center",
+          marginBottom: "30px",
+          marginTop: "10px",
+        }}
+      >
         Tool of the Day
       </Title>
 
@@ -238,10 +265,7 @@ function ToolOfTheDay() {
           minRows={4}
           mb="md"
         />
-        <Button
-          fullWidth
-          onClick={submitReviewHandler}
-        >
+        <Button fullWidth onClick={submitReviewHandler}>
           Submit Review
         </Button>
       </Modal>
@@ -257,17 +281,25 @@ function ToolOfTheDay() {
       >
         {reviewsLoading && <Loader color="gray" />}
         {!reviewsLoading && selectedToolReviews.length === 0 && (
-          <Text >No reviews yet for this tool.</Text>
+          <Text>No reviews yet for this tool.</Text>
         )}
         {!reviewsLoading && selectedToolReviews.length > 0 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          >
             {selectedToolReviews.map((review, idx) => (
               <Paper key={review.id || idx} shadow="xs" p="md" withBorder>
-                <Rating value={review.rating} fractions={2} readOnly size="sm" mb={4}/>
+                <Rating
+                  value={review.rating}
+                  fractions={2}
+                  readOnly
+                  size="sm"
+                  mb={4}
+                />
                 <Text size="sm" mt={4} mb={4}>
-                  By: {review.User?.firstName || 'Anonymous'}
+                  By: {review.User?.firstName || "Anonymous"}
                 </Text>
-                <Text size="sm" >{review.content}</Text>
+                <Text size="sm">{review.content}</Text>
                 <Text size="xs" color="dimmed" mt={5}>
                   {new Date(review.createdAt).toLocaleDateString()}
                 </Text>

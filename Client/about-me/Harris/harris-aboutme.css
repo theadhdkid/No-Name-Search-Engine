@@ -185,8 +185,8 @@ h3 {
 }
 
 .profile-img {
-  width: 180px;   /* Reduce width */
-  height: 240px;  /* Increase height */
+  width: 180px; /* Reduce width */
+  height: 240px; /* Increase height */
   border-radius: 20%; /* Slightly rounded corners */
   display: block;
   margin: 20px auto; /* Centers it */

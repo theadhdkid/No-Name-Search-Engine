@@ -1,4 +1,4 @@
-import { Title, Text, Grid, Image, Button } from '@mantine/core';
+import { Title, Text, Grid, Image, Button } from "@mantine/core";
 
 function Test() {
   return (

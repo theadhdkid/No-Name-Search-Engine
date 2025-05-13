@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -18,7 +18,7 @@ async function testPrismaConnection() {
   } catch (error) {
     console.error("Error connecting to the database or querying User:", error);
   } finally {
-    await prisma.$disconnect();  // Disconnect Prisma when done
+    await prisma.$disconnect(); // Disconnect Prisma when done
   }
 }
 

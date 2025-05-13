@@ -13,15 +13,14 @@ import {
 import { useState, useEffect } from "react";
 import CustomizeSettings from "../components/CustomizeSettings";
 import AIchat from "../components/AIchat";
-
-
-
+import AccountSettings from "../components/AccountSettings";
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [theme, setTheme] = useState("light"); // for storing default theme
@@ -29,11 +28,13 @@ function Home() {
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme); // Save to localStorage
   };
-  
+
   const [customColor, setCustomColor] = useState("#646cff"); // default custom color
 
-
   const navigate = useNavigate();
+
+  const [recentSearches, setRecentSearches] = useState([]);
+
 
   //removed hardcoded user
   useEffect(() => {
@@ -42,11 +43,14 @@ function Home() {
       setUserData(JSON.parse(storedUser));
     }
     const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) {
-    setTheme(savedTheme);
-  }
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+
+    const storedSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    setRecentSearches(storedSearches);
   }, []);
-  
+
 
   const userInitials = userData
     ? `${userData.firstName[0]}${userData.lastName[0]}`
@@ -55,41 +59,64 @@ function Home() {
   // Updated fetchSearchResults function to only navigate to the search results page
   const fetchSearchResults = () => {
     const cleanedSearchTerm = searchTerm.trim();
+    if (!cleanedSearchTerm) return;
 
-    // Save search term and selected category to localStorage so SearchResults can read them
+    // Save to localStorage for search results
     localStorage.setItem("searchTerm", cleanedSearchTerm);
     localStorage.setItem("selectedCategory", selectedCategory);
 
-    // Navigate to results page
+    // Save to recent searches
+    const key = "recentSearches";
+    const maxItems = 5;
+    let searches = JSON.parse(localStorage.getItem(key)) || [];
+
+    // Avoid duplicates
+    searches = searches.filter((item) => item !== cleanedSearchTerm);
+    searches.unshift(cleanedSearchTerm);
+    if (searches.length > maxItems) {
+      searches = searches.slice(0, maxItems);
+    }
+
+    localStorage.setItem(key, JSON.stringify(searches));
+    setRecentSearches(searches); // update UI
+
     navigate("/SearchResults");
   };
+
+
+
 
   return (
     <>
       <CustomizeSettings
         opened={settingsOpen}
-  onClose={() => setSettingsOpen(false)}
-  onThemeChange={handleThemeChange}
-  customColor={customColor}
-  setCustomColor={setCustomColor}
+        onClose={() => setSettingsOpen(false)}
+        onThemeChange={handleThemeChange}
+        customColor={customColor}
+        setCustomColor={setCustomColor}
       />
-  
-  <div
-  style={{
-    backgroundColor:
-      theme === "dark"
-        ? "#1a1a1a"
-        : theme === "light"
-        ? "#f4f4f4"
-        : theme, // treat theme as color code if not light/dark
-    color: theme === "dark" ? "#ffffff" : "#000000",
-    display: "flex",
-    height: "100vh",
-    width: "100vw",
-    overflow: "hidden",
-  }}
->
 
+      <AccountSettings
+        opened={accountOpen}
+        onClose={() => setAccountOpen(false)}
+        userData={userData}
+      />
+
+      <div
+        style={{
+          backgroundColor:
+            theme === "dark"
+              ? "#1a1a1a"
+              : theme === "light"
+                ? "#f4f4f4"
+                : theme, // treat theme as color code if not light/dark
+          color: theme === "dark" ? "#ffffff" : "#000000",
+          display: "flex",
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+        }}
+      >
         {/* Sidebar */}
         <div
           style={{
@@ -107,21 +134,21 @@ function Home() {
             style={{ width: "120px", marginBottom: "20px" }}
           />
           {["Dashboard", "Tool of the Day", "Bookmarks"].map((text) => (
-  <Button
-    key={text}
-    variant="filled"
-    color="gray"
-    style={{ color: "black", background: "#e0e0e0" }}
-    fullWidth
-    onClick={() => {
-      if (text === "Dashboard") navigate("/home");
-      if (text === "Bookmarks") navigate("/bookmarks");
-      if (text === "Tool of the Day") navigate("/tooloftheday");
-    }}
-  >
-    {text}
-  </Button>
-))}
+            <Button
+              key={text}
+              variant="filled"
+              color="gray"
+              style={{ color: "black", background: "#e0e0e0" }}
+              fullWidth
+              onClick={() => {
+                if (text === "Dashboard") navigate("/home");
+                if (text === "Bookmarks") navigate("/bookmarks");
+                if (text === "Tool of the Day") navigate("/tooloftheday");
+              }}
+            >
+              {text}
+            </Button>
+          ))}
 
           <Text weight={600} size="sm" mt="md" style={{ color: "black" }}>
             Categories
@@ -144,56 +171,61 @@ function Home() {
               {cat}
             </Button>
           ))}
-        </div> {/* Closing Sidebar */}
-  
+        </div>{" "}
+        {/* Closing Sidebar */}
         {/* Main Content */}
         <div style={{ flex: 1, padding: "30px 40px", position: "relative" }}>
           {/* Avatar Menu */}
           {userData && (
             <div style={{ position: "absolute", top: 30, right: 40 }}>
-             <Menu shadow="md" width={200} withArrow position="bottom-end">
-  <Menu.Target>
-    <Avatar radius="xl" color="gray" style={{ cursor: "pointer" }}>
-      {userInitials}
-    </Avatar>
-  </Menu.Target>
-  <Menu.Dropdown>
-    <Menu.Item onClick={() => setSettingsOpen(true)}>Customize Settings</Menu.Item>
-    <Menu.Item>Help</Menu.Item>
-    <Menu.Item>Account Settings</Menu.Item>
-    <Menu.Item
-      color="red"
-      onClick={() => {
-        localStorage.removeItem("user");
-        navigate("/");
-      }}
-    >
-      Logout
-    </Menu.Item>
-  </Menu.Dropdown>
-</Menu>
-
+              <Menu shadow="md" width={200} withArrow position="bottom-end">
+                <Menu.Target>
+                  <Avatar
+                    radius="xl"
+                    color="gray"
+                    style={{ cursor: "pointer" }}
+                  >
+                    {userInitials}
+                  </Avatar>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item onClick={() => setSettingsOpen(true)}>
+                    Customize Settings
+                  </Menu.Item>
+                  <Menu.Item>Help</Menu.Item>
+                  <Menu.Item onClick={() => setAccountOpen(true)}>
+                    Account Settings
+                  </Menu.Item>
+                  <Menu.Item
+                    color="red"
+                    onClick={() => {
+                      localStorage.removeItem("user");
+                      navigate("/");
+                    }}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </div>
           )}
-  
+
           {/* Greeting */}
           <Title
-  order={2}
-  style={{
-    marginBottom: "10px",
-    fontFamily: "'Montserrat', sans-serif",
-    fontWeight: 700,
-    fontSize: "26px",
-    color: theme === "dark" ? "#ffffff" : "#000000",
-  }}
->
-  Hello Again,{" "}
-  <span style={{ color: theme === "dark" ? "#ffffff" : "#000000" }}>
-    {userData?.firstName || "User"}!
-  </span>
-</Title>
-
-
+            order={2}
+            style={{
+              marginBottom: "10px",
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 700,
+              fontSize: "26px",
+              color: theme === "dark" ? "#ffffff" : "#000000",
+            }}
+          >
+            Hello Again,{" "}
+            <span style={{ color: theme === "dark" ? "#ffffff" : "#000000" }}>
+              {userData?.firstName || "User"}!
+            </span>
+          </Title>
 
           {/* Search */}
           <div
@@ -216,7 +248,11 @@ function Home() {
               ]}
               value={selectedCategory}
               onChange={setSelectedCategory}
-              style={{ width: "220px", background: "white", borderRadius: "5px" }}
+              style={{
+                width: "220px",
+                background: "white",
+                borderRadius: "5px",
+              }}
             />
             <Autocomplete
               placeholder="What tool can I help you find today?"
@@ -233,64 +269,80 @@ function Home() {
               {loading ? <Loader size="sm" color="white" /> : "Search"}
             </Button>
           </div>
-  
+
           {/* Dashboard Section */}
           <Title order={3} mb="sm" align="left">
             DASHBOARD
           </Title>
-  
-          <Paper
-  p="md"
-  shadow="xs"
-  mb="lg"
-  style={{
-    backgroundColor: theme === "dark" ? "#333" : "#d3d3d3", // updated for dark mode
-    borderRadius: "6px",
-    color: theme === "dark" ? "#ffffff" : "#000000", // Optional: ensure inner text is also visible
-  }}
->
-  <Text weight={600} mb="sm" align="center" style={{ marginBottom: "20px" }}>
-    Recent Activity
-  </Text>
 
-  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-    {["Paraphraser tools help", "Data Analysis tools comparison", "Research assistance"].map(
-      (activity, index) => (
-        <div
-          key={index}
-          style={{
-            background: theme === "dark" ? "#444" : "white", // light cards even in dark mode
-            padding: "12px 20px",
-            borderRadius: "4px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            color: theme === "dark" ? "#fff" : "#000",
-          }}
-        >
-          <Text weight={500}>{activity}</Text>
-          <Button
-            size="xs"
+          <Paper
+            p="md"
+            shadow="xs"
+            mb="lg"
             style={{
-              backgroundColor: "black",
-              color: "white",
-              padding: "5px 12px",
-              fontSize: "12px",
-              fontWeight: "bold",
+              backgroundColor: theme === "dark" ? "#333" : "#d3d3d3", // updated for dark mode
+              borderRadius: "6px",
+              color: theme === "dark" ? "#ffffff" : "#000000", // Optional: ensure inner text is also visible
             }}
           >
-            OPEN
-          </Button>
+            <Text
+              weight={600}
+              mb="sm"
+              align="center"
+              style={{ marginBottom: "20px" }}
+            >
+              Recent Activity
+            </Text>
+
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              {recentSearches.length > 0 ? (
+                recentSearches.map((query, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: theme === "dark" ? "#444" : "white",
+                      padding: "12px 20px",
+                      borderRadius: "4px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      color: theme === "dark" ? "#fff" : "#000",
+                    }}
+                  >
+                    <Text weight={500}>{query}</Text>
+                    <Button
+                      size="xs"
+                      onClick={() => {
+                        setSearchTerm(query);
+                        fetchSearchResults();
+                      }}
+                      style={{
+                        backgroundColor: "black",
+                        color: "white",
+                        padding: "5px 12px",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      OPEN
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <Text align="center" size="sm" style={{ opacity: 0.6 }}>
+                  No recent searches yet.
+                </Text>
+              )}
+
+            </div>
+          </Paper>
+          <div style={{ marginTop: "2rem" }}>
+            <AIchat theme={theme} />
+          </div>
         </div>
-      )
-    )}
-  </div>
-</Paper>
-<div style={{ marginTop: "2rem" }}>
-  <AIchat theme={theme} />
-</div>
-        </div> 
-      </div> 
+      </div>
     </>
   );
 }
