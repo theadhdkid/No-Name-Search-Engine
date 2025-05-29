@@ -1,7 +1,7 @@
 # No Name Search Engine: AI Tools Discovery Platform
 
 ## Overview
-AI Tools Discovery Platform is a collaborative full-stack web application designed to help users discover, review, and bookmark AI tools across multiple categories such as academics, research, career, writing, mental health, and creativity. Developed by a team of seven students at San Francisco State University for the CSC-648-848 course (Spring 2025), the platform serves as a centralized hub for finding, evaluating, and interacting with AI tools.
+AI Tools Discovery Platform is a collaborative full-stack web application designed to help users discover, review, and bookmark AI tools across multiple categories such as academics, research, career, writing, mental health, and creativity. Developed by a team of four students at San Francisco State University, the platform serves as a centralized hub for finding, evaluating, and interacting with AI tools.
 
 ## Features
 
