@@ -38,6 +38,7 @@ Recent user activity tracking for easy access to bookmarks and reviews
 Intuitive sidebar navigation and card-based UI design for tool presentation
 
 ### Technology Stack
+
 Layer	Technologies
 Frontend	React 19, Vite, Mantine UI, React Router
 Backend	Fastify (Node.js), Prisma ORM, MySQL
@@ -47,6 +48,7 @@ Validation	Zod schema validation
 Testing	API endpoint testing with Jest/Supertest (if applicable)
 
 ### Architecture & Data Models
+
 User: Stores basic user info, securely hashed passwords, and relationships to favorites and reviews
 
 AI Tool: Contains tool metadata including name, category, brand, and image links
@@ -58,18 +60,18 @@ Review: Contains user-generated reviews and ratings linked to both users and AI 
 Application Workflow
 User registers or logs in
 
-Dashboard displays recent activity, bookmarked tools, and AI chat interface
+The dashboard displays recent activity, bookmarked tools, and an AI chat interface
 
 Users search AI tools with advanced filters and view detailed tool cards
 
-Users bookmark favorite tools and submit reviews with star ratings
+Users bookmark their favorite tools and submit reviews with star ratings
 
 The "Tool of the Day" feature encourages discovery and exploration
 
 ## Installation & Setup
 
 ### Clone the repository:
-git clone https://github.com/yourusername/ai-tools-discovery-platform.git
+git clone https://github.com/theadhdkid/No-Name-Search-Engine.git
 cd ai-tools-discovery-platform
 
 ### Install dependencies and tools:
@@ -103,6 +105,7 @@ RESTful API design with Fastify routing and middleware
 Comprehensive testing of API endpoints (unit and integration tests)
 
 ## Future Improvements
+
 Implement social login (Google, GitHub) for streamlined authentication
 
 Add pagination and sorting options to search results
